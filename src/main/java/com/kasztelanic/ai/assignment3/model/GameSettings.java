@@ -1,6 +1,6 @@
-package com.kasztelanic.ai.assignment3;
+package com.kasztelanic.ai.assignment3.model;
 
-import com.kasztelanic.ai.assignment3.enums.PlayerType;
+import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 
 public class GameSettings {
 
@@ -67,5 +67,4 @@ public class GameSettings {
         return "GameSettings [boardSize=" + boardSize + ", treeDepth=" + treeDepth + ", player1=" + player1
                 + ", player2=" + player2 + ", alphaBetaPruning=" + alphaBetaPruning + "]";
     }
-
 }

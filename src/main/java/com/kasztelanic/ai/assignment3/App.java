@@ -1,5 +1,7 @@
 package com.kasztelanic.ai.assignment3;
 
+import com.kasztelanic.ai.assignment3.properties.AppProperties;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,12 +16,12 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/views/RootLayout.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource(AppProperties.ROOT_LAYOUT_FXML_PATH));
 
         Scene scene = new Scene(root, 1366, 768);
-        scene.getStylesheets().add(getResource("/tictactoe-blueskin.css"));
+        scene.getStylesheets().add(getResource(AppProperties.STYLESHEET_PATH));
 
-        stage.setTitle("Stratego");
+        stage.setTitle(AppProperties.MAIN_WINDOW_TITLE);
         stage.setScene(scene);
         stage.show();
     }

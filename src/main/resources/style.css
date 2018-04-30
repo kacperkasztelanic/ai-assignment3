@@ -1,0 +1,17 @@
+.board {
+	-fx-hgap: 3.0px;
+	-fx-vgap: 3.0px;
+}
+
+.square {
+	-fx-padding: 0.0px;
+	-fx-background-color: white;
+}
+
+.mainView {
+	-fx-background-color: slategrey;
+}
+
+.hover {
+	-fx-background-color: #dae7f3;
+}

@@ -1,4 +1,4 @@
-package com.kasztelanic.ai.assignment3.enums;
+package com.kasztelanic.ai.assignment3.model.enums;
 
 public enum PlayerType {
 

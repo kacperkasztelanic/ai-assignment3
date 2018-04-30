@@ -1,6 +1,7 @@
-package com.kasztelanic.ai.assignment3;
+package com.kasztelanic.ai.assignment3.model;
 
-import com.kasztelanic.ai.assignment3.enums.PlayerType;
+import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
+import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
@@ -20,11 +21,15 @@ public class Game {
     private ReadOnlyObjectWrapper<PlayerType> player1Type;
     private ReadOnlyObjectWrapper<PlayerType> player2Type;
     private ReadOnlyBooleanWrapper player1Turn;
+    private ReadOnlyObjectWrapper<GameCellState>[][] gameCells;
+
+    // private GameSolver gameSolver;
 
     public static Game newGame(GameSettings gameSettings) {
         return new Game(gameSettings);
     }
 
+    @SuppressWarnings("unchecked")
     private Game(GameSettings gameSettings) {
         boardSize = new ReadOnlyIntegerWrapper(gameSettings.getBoardSize());
         treeDepth = new ReadOnlyIntegerWrapper(gameSettings.getTreeDepth());
@@ -35,6 +40,14 @@ public class Game {
         player1Points = new ReadOnlyIntegerWrapper();
         player2Points = new ReadOnlyIntegerWrapper();
         isEnd = new ReadOnlyBooleanWrapper(false);
+        // gameSolver = new GameSolver(this);
+        gameCells = new ReadOnlyObjectWrapper[boardSize.get()][boardSize.get()];
+        for (int i = 0; i < boardSize.get(); i++) {
+            for (int j = 0; j < boardSize.get(); j++) {
+                gameCells[i][j] = new ReadOnlyObjectWrapper<>(GameCellState.EMPTY);
+                // gameCells[i][i].addListener((o, ov, nv) -> gameSolver.updateState());
+            }
+        }
     }
 
     public ReadOnlyIntegerProperty getBoardSizeProperty() {
@@ -123,6 +136,20 @@ public class Game {
 
     public void changeTurn() {
         player1Turn.set(!player1Turn.get());
+    }
+
+    public ReadOnlyObjectProperty<GameCellState> getGameCellStateProperty(int row, int col) {
+        return gameCells[row][col].getReadOnlyProperty();
+    }
+
+    public GameCellState getGameCellState(int row, int col) {
+        return gameCells[row][col].get();
+    }
+
+    public void setGameCellState(int row, int col, GameCellState state) {
+        if (gameCells[row][col].get().equals(GameCellState.EMPTY)) {
+            gameCells[row][col].set(state);
+        }
     }
 
     @Override
