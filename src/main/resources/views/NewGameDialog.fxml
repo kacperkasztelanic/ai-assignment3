@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <DialogPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="com.kasztelanic.ai.assignment3.controller.NewGameDialogController">
+	fx:controller="com.kasztelanic.ai.assignment3.view.controllers.NewGameDialogController">
 	<content>
 		<AnchorPane minHeight="240.0" minWidth="300.0">
 			<children>
