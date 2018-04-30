@@ -2,6 +2,8 @@ package com.kasztelanic.ai.assignment3.model;
 
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
+import com.kasztelanic.ai.assignment3.services.GameSolver;
+import com.kasztelanic.ai.assignment3.services.GameSolverFactory;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
@@ -23,7 +25,7 @@ public class Game {
     private ReadOnlyBooleanWrapper player1Turn;
     private ReadOnlyObjectWrapper<GameCellState>[][] gameCells;
 
-    // private GameSolver gameSolver;
+    private GameSolver gameSolver;
 
     public static Game newGame(GameSettings gameSettings) {
         return new Game(gameSettings);
@@ -40,12 +42,12 @@ public class Game {
         player1Points = new ReadOnlyIntegerWrapper();
         player2Points = new ReadOnlyIntegerWrapper();
         isEnd = new ReadOnlyBooleanWrapper(false);
-        // gameSolver = new GameSolver(this);
+        gameSolver = GameSolverFactory.getSolver(this);
         gameCells = new ReadOnlyObjectWrapper[boardSize.get()][boardSize.get()];
         for (int i = 0; i < boardSize.get(); i++) {
             for (int j = 0; j < boardSize.get(); j++) {
                 gameCells[i][j] = new ReadOnlyObjectWrapper<>(GameCellState.EMPTY);
-                // gameCells[i][i].addListener((o, ov, nv) -> gameSolver.updateState());
+                gameCells[i][j].addListener((o, ov, nv) -> gameSolver.updateState());
             }
         }
     }

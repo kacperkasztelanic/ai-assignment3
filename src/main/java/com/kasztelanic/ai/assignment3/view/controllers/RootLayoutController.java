@@ -103,6 +103,14 @@ public class RootLayoutController {
         player2Lb.textProperty().bind(game.getPlayer2TypeProperty().asString());
         player2PointsLb.textProperty().bind(game.getPlayer2PointsProperty().asString());
         turnLb.textProperty().bind(game.getPlayer1TurnProperty().asString());
+        mainView.disableProperty().bind(game.getIsEndProperty());
+        game.getIsEndProperty().addListener((o, ov, nv) -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Game over");
+            alert.setHeaderText("Game is over");
+            alert.setContentText("Player x is the winner!");
+            alert.show();
+        });
     }
 
     private void prepareBoard() {

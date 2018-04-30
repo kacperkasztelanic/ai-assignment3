@@ -33,7 +33,6 @@ public class GameCell extends Pane {
                 if (isEmpty() && !game.isEnd()) {
                     game.setGameCellState(row, col,
                             game.isPlayer1Turn() ? GameCellState.Player1 : GameCellState.Player2);
-                    game.changeTurn();
                 }
             }
         });
