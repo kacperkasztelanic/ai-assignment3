@@ -18,7 +18,8 @@ public class App extends Application {
 
         Scene scene = new Scene(root, 1366, 768);
         scene.getStylesheets().add(getResource("/tictactoe-blueskin.css"));
-        stage.setTitle("FXML Welcome");
+
+        stage.setTitle("Stratego");
         stage.setScene(scene);
         stage.show();
     }

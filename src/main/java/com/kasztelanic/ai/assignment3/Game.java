@@ -1,78 +1,134 @@
 package com.kasztelanic.ai.assignment3;
 
+import com.kasztelanic.ai.assignment3.enums.PlayerType;
+
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+
 public class Game {
 
-    private int player1Points;
-    private int player2Points;
-    private boolean isEnd;
-    private boolean player1Turn = true;
-    private GameSettings gameSettings;
+    private ReadOnlyIntegerWrapper player1Points;
+    private ReadOnlyIntegerWrapper player2Points;
+    private ReadOnlyBooleanWrapper isEnd;
+    private ReadOnlyIntegerWrapper boardSize;
+    private ReadOnlyIntegerWrapper treeDepth;
+    private ReadOnlyBooleanWrapper alphaBetaPruning;
+    private ReadOnlyObjectWrapper<PlayerType> player1Type;
+    private ReadOnlyObjectWrapper<PlayerType> player2Type;
+    private ReadOnlyBooleanWrapper player1Turn;
 
     public static Game newGame(GameSettings gameSettings) {
         return new Game(gameSettings);
     }
 
-    public Game(GameSettings gameSettings) {
-        this.gameSettings = gameSettings;
+    private Game(GameSettings gameSettings) {
+        boardSize = new ReadOnlyIntegerWrapper(gameSettings.getBoardSize());
+        treeDepth = new ReadOnlyIntegerWrapper(gameSettings.getTreeDepth());
+        alphaBetaPruning = new ReadOnlyBooleanWrapper(gameSettings.isAlphaBetaPruning());
+        player1Type = new ReadOnlyObjectWrapper<>(gameSettings.getPlayer1());
+        player2Type = new ReadOnlyObjectWrapper<>(gameSettings.getPlayer2());
+        player1Turn = new ReadOnlyBooleanWrapper(true);
+        player1Points = new ReadOnlyIntegerWrapper();
+        player2Points = new ReadOnlyIntegerWrapper();
+        isEnd = new ReadOnlyBooleanWrapper(false);
+    }
+
+    public ReadOnlyIntegerProperty getBoardSizeProperty() {
+        return boardSize.getReadOnlyProperty();
+    }
+
+    public int getBoardSize() {
+        return boardSize.get();
+    }
+
+    public ReadOnlyIntegerProperty getTreeDepthProperty() {
+        return treeDepth.getReadOnlyProperty();
+    }
+
+    public int getTreeDepth() {
+        return treeDepth.get();
+    }
+
+    public ReadOnlyBooleanProperty getAlphaBetaPruningProperty() {
+        return alphaBetaPruning.getReadOnlyProperty();
+    }
+
+    public boolean isAlphaBetaPruning() {
+        return alphaBetaPruning.get();
+    }
+
+    public ReadOnlyObjectProperty<PlayerType> getPlayer1TypeProperty() {
+        return player1Type.getReadOnlyProperty();
+    }
+
+    public PlayerType getPlayer1Type() {
+        return player1Type.get();
+    }
+
+    public ReadOnlyObjectProperty<PlayerType> getPlayer2TypeProperty() {
+        return player2Type.getReadOnlyProperty();
+    }
+
+    public PlayerType getPlayer2Type() {
+        return player2Type.get();
+    }
+
+    public ReadOnlyIntegerProperty getPlayer1PointsProperty() {
+        return player1Points.getReadOnlyProperty();
     }
 
     public int getPlayer1Points() {
-        return player1Points;
+        return player1Points.get();
     }
 
-    public void setPlayer1Points(int player1Points) {
-        this.player1Points = player1Points;
+    public void addPlayer1Points(int points) {
+        player1Points.set(player1Points.get() + points);
+    }
+
+    public ReadOnlyIntegerProperty getPlayer2PointsProperty() {
+        return player2Points.getReadOnlyProperty();
     }
 
     public int getPlayer2Points() {
-        return player2Points;
+        return player2Points.get();
     }
 
-    public void setPlayer2Points(int player2Points) {
-        this.player2Points = player2Points;
+    public void addPlayer2Points(int points) {
+        player2Points.set(player2Points.get() + points);
+    }
+
+    public ReadOnlyBooleanProperty getIsEndProperty() {
+        return isEnd.getReadOnlyProperty();
     }
 
     public boolean isEnd() {
-        return isEnd;
+        return isEnd.get();
     }
 
-    public void setEnd(boolean isEnd) {
-        this.isEnd = isEnd;
+    public void endGame() {
+        isEnd.set(true);
+    }
+
+    public ReadOnlyBooleanProperty getPlayer1TurnProperty() {
+        return player1Turn.getReadOnlyProperty();
     }
 
     public boolean isPlayer1Turn() {
-        return player1Turn;
+        return player1Turn.get();
     }
 
-    public void setPlayer1Turn(boolean player1Turn) {
-        this.player1Turn = player1Turn;
-    }
-
-    public GameSettings getGameSettings() {
-        return gameSettings;
-    }
-
-    public void setGameSettings(GameSettings gameSettings) {
-        this.gameSettings = gameSettings;
+    public void changeTurn() {
+        player1Turn.set(!player1Turn.get());
     }
 
     @Override
     public String toString() {
-        return "GameState [player1Points=" + player1Points + ", player2Points=" + player2Points + ", isEnd=" + isEnd
-                + ", player1Turn=" + player1Turn + ", gameSettings=" + gameSettings + "]";
-    }
-
-    public boolean isGameOver() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public void boardUpdated() {
-        player1Turn = !player1Turn;
-        // TODO Auto-generated method stub
-    }
-
-    public void nextTurn() {
-        // TODO Auto-generated method stub
+        return "GameState [player1Points=" + player1Points.get() + ", player2Points=" + player2Points.get() + ", isEnd="
+                + isEnd.get() + ", player1Turn=" + player1Turn.get() + ", boardSize=" + boardSize.get() + ", treeDepth="
+                + treeDepth.get() + "]";
     }
 }

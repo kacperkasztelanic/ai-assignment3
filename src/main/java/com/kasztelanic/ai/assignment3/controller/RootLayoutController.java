@@ -22,12 +22,13 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class RootLayoutController {
 
@@ -56,12 +57,7 @@ public class RootLayoutController {
     @FXML
     private Label turnLb;
 
-    private Game gameState;
-
-    @FXML
-    public void initialize() {
-        updateStatusBar();
-    }
+    private Game gameState = null;
 
     @FXML
     public void onNewGame() {
@@ -82,47 +78,45 @@ public class RootLayoutController {
             GameSettings gameSettings = settings.orElse(null);
             if (gameSettings != null) {
                 gameState = Game.newGame(gameSettings);
+                init();
                 prepareBoard();
             } else {
                 gameState = null;
             }
-            updateStatusBar();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void prepareBoard() {
-        GridPane board = new Board(gameState).getSkin();
-        board.autosize();
-        mainView.getChildren().add(board);
-    }
-
-    private void updateStatusBar() {
-        if (gameState != null) {
-            // boardSizeLb.textProperty().bind(observable);
-            boardSizeLb.setText(String.valueOf(gameState.getGameSettings().getBoardSize()));
-            treeDepthLb.setText(String.valueOf(gameState.getGameSettings().getTreeDepth()));
-            alphaBetaIndicator.setManaged(gameState.getGameSettings().isAlphaBetaPruning());
-            player1Lb.setText(gameState.getGameSettings().getPlayer1().toString());
-            player2Lb.setText(gameState.getGameSettings().getPlayer2().toString());
-            player1PointsLb.setText(String.valueOf(gameState.getPlayer1Points()));
-            player2PointsLb.setText(String.valueOf(gameState.getPlayer2Points()));
-            turnLb.setText(gameState.isPlayer1Turn() ? "Player1" : "Player2");
-        } else {
-            clearStatusBar();
-        }
-    }
-
-    private void clearStatusBar() {
+    @FXML
+    private void initialize() {
         boardSizeLb.setText(null);
         treeDepthLb.setText(null);
+        alphaBetaIndicator.setVisible(false);
         alphaBetaIndicator.setManaged(false);
         player1Lb.setText(null);
         player2Lb.setText(null);
         player1PointsLb.setText(null);
         player2PointsLb.setText(null);
         turnLb.setText(null);
+    }
+
+    private void init() {
+        boardSizeLb.textProperty().bind(gameState.getBoardSizeProperty().asString());
+        treeDepthLb.textProperty().bind(gameState.getTreeDepthProperty().asString());
+        alphaBetaIndicator.visibleProperty().bind(gameState.getAlphaBetaPruningProperty());
+        alphaBetaIndicator.managedProperty().bind(gameState.getAlphaBetaPruningProperty());
+        player1Lb.textProperty().bind(gameState.getPlayer1TypeProperty().asString());
+        player1PointsLb.textProperty().bind(gameState.getPlayer1PointsProperty().asString());
+        player2Lb.textProperty().bind(gameState.getPlayer2TypeProperty().asString());
+        player2PointsLb.textProperty().bind(gameState.getPlayer2PointsProperty().asString());
+        turnLb.textProperty().bind(gameState.getPlayer1TurnProperty().asString());
+    }
+
+    private void prepareBoard() {
+        GridPane board = new Board(gameState).getSkin();
+        board.autosize();
+        mainView.getChildren().add(board);
     }
 
     @FXML
@@ -147,7 +141,7 @@ class Board {
     private final int boardSize;
 
     public Board(Game game) {
-        boardSize = game.getGameSettings().getBoardSize();
+        boardSize = game.getBoardSize();
         squares = new Square[boardSize][boardSize];
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
@@ -208,10 +202,10 @@ class Square {
     }
 
     public void pressed() {
-        if (!game.isGameOver() && state.get() == State.EMPTY) {
+        if (!game.isEnd() && state.get() == State.EMPTY) {
             state.set(game.isPlayer1Turn() ? State.CROSS : State.NOUGHT);
-            game.boardUpdated();
-            game.nextTurn();
+            // game.boardUpdated();
+            game.changeTurn();
         }
     }
 
@@ -226,10 +220,16 @@ class SquareSkin extends StackPane {
     static final Image crossImage = new Image(
             "http://icons.iconarchive.com/icons/double-j-design/origami-colored-pencil/128/blue-cross-icon.png");
 
-    private final ImageView imageView = new ImageView();
+    // private final ImageView imageView = new ImageView();
+    private final Rectangle rectangle = new Rectangle();
 
     public SquareSkin(final Square square) {
         getStyleClass().add("square");
+
+        rectangle.setWidth(500);
+        rectangle.setHeight(500);
+        rectangle.maxHeight(500);
+        rectangle.setFill(Color.BLUE);
 
         // imageView.setMouseTransparent(true);
         // imageView.setFitHeight(100);
@@ -239,7 +239,7 @@ class SquareSkin extends StackPane {
         // imageView.setPreserveRatio(true);
         // getChildren().setAll(imageView);
         // setPrefSize(crossImage.getHeight(), crossImage.getHeight());
-        setMaxSize(30, 30);
+        // setMaxSize(30, 30);
 
         setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -255,7 +255,6 @@ class SquareSkin extends StackPane {
                 switch (state) {
                 case EMPTY:
                     // imageView.setImage(null);
-
                     break;
                 case NOUGHT:
                     // imageView.setImage(noughtImage);
