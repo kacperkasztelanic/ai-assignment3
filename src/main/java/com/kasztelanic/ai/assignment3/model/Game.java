@@ -57,36 +57,20 @@ public class Game {
                 final int col = j;
                 gameCells[i][j] = new ReadOnlyObjectWrapper<>(GameCellState.EMPTY);
                 gameCells[i][j].addListener((o, ov, nv) -> {
-                    System.out.println("Change listener");
                     if (currentPlayer.get().getType() == PlayerType.Human) {
                         currentPlayer.get().move(row, col);
                         moveDone();
                     }
-
-                    // System.out.println("Changed " + row + ", " + col);
-                    // if (!isEnd()) {
-                    // currentPlayer.get().move(row, col);
-                    // System.out.println("Current player is: " + currentPlayer.get());
-                    // changeTurn();
-                    // fieldsFilled++;
-                    // // currentPlayer.get().move(row, col);
-                    // System.out.println("Current player is: " + currentPlayer.get());
-                    // System.out.println("Fields filled: " + fieldsFilled);
-                    // }
-                    // checkEnd();
                 });
             }
         }
     }
 
-    public void autobegin() {
-        // if (getFilled() == 0) {
-        player1.move(0, 0);
-        moveDone();
-        // } else {
-        // currentPlayer.get().move(0, 0);
-        // moveDone();
-        // }
+    public boolean nextMove() {
+        if (currentPlayer.get().getType() != PlayerType.Human && !isEnd()) {
+            currentPlayer.get().move(0, 0);
+        }
+        return !isEnd();
     }
 
     public void moveDone() {
@@ -95,9 +79,6 @@ public class Game {
         System.out.println("Filled: " + fieldsFilled + "|" + allFields);
         if (!isEnd()) {
             changeTurn();
-            if (currentPlayer.get().getType() != PlayerType.Human) {
-                currentPlayer.get().move(0, 0);
-            }
         }
     }
 
@@ -112,17 +93,17 @@ public class Game {
         }
     }
 
-    private int getFilled() {
-        int res = 0;
-        for (int i = 0; i < boardSize.get(); i++) {
-            for (int j = 0; j < boardSize.get(); j++) {
-                if (gameCells[i][j].get() != GameCellState.EMPTY) {
-                    res++;
-                }
-            }
-        }
-        return res;
-    }
+    // private int getFilled() {
+    // int res = 0;
+    // for (int i = 0; i < boardSize.get(); i++) {
+    // for (int j = 0; j < boardSize.get(); j++) {
+    // if (gameCells[i][j].get() != GameCellState.EMPTY) {
+    // res++;
+    // }
+    // }
+    // }
+    // return res;
+    // }
 
     public ReadOnlyIntegerProperty getBoardSizeProperty() {
         return boardSize.getReadOnlyProperty();

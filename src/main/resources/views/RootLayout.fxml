@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Rectangle?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="1024.0" prefHeight="600.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kasztelanic.ai.assignment3.view.controllers.RootLayoutController">
 	<top>
@@ -32,7 +33,7 @@
 		<AnchorPane fx:id="mainView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
 	</center>
 	<bottom>
-		<HBox prefHeight="30.0" prefWidth="200.0" spacing="20.0" BorderPane.alignment="CENTER">
+		<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="20.0" BorderPane.alignment="CENTER">
 			<children>
 				<HBox alignment="CENTER" spacing="10.0">
 					<children>
@@ -78,10 +79,10 @@
 				<HBox alignment="CENTER" layoutX="634.0" layoutY="10.0" spacing="10.0">
 					<children>
 						<Label text="Turn:" />
-						<Label fx:id="turnLb" text="Player1" />
+                  <Rectangle fx:id="turnRectangle" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="20.0" stroke="BLACK" strokeType="INSIDE" width="20.0" />
 					</children>
 				</HBox>
-            <Button fx:id="nextMove" mnemonicParsing="false" onAction="#onNextMove" text="Next move" />
+            <Button fx:id="nextMoveBt" mnemonicParsing="false" onAction="#onNextMove" text="Next move" />
 			</children>
 			<padding>
 				<Insets left="10.0" />

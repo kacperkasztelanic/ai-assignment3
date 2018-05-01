@@ -21,6 +21,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class RootLayoutController {
 
@@ -47,11 +49,11 @@ public class RootLayoutController {
     @FXML
     private Label player2PointsLb;
     @FXML
-    private Label turnLb;
+    private Rectangle turnRectangle;
+    @FXML
+    private Button nextMoveBt;
 
     private Game game = null;
-    @FXML
-    private Button nextMove;
 
     @FXML
     public void onNewGame() {
@@ -92,7 +94,7 @@ public class RootLayoutController {
         player2Lb.setText(null);
         player1PointsLb.setText(null);
         player2PointsLb.setText(null);
-        turnLb.setText(null);
+        nextMoveBt.setDisable(true);
         mainView.getStyleClass().add("mainView");
     }
 
@@ -105,8 +107,13 @@ public class RootLayoutController {
         player1PointsLb.textProperty().bind(game.getPlayer1().getPointsProperty().asString());
         player2Lb.textProperty().bind(game.getPlayer2().getTypeProperty().asString());
         player2PointsLb.textProperty().bind(game.getPlayer2().getPointsProperty().asString());
-        turnLb.textProperty().bind(game.getCurrentPlayerProperty().asString());
         mainView.disableProperty().bind(game.getIsEndProperty());
+        nextMoveBt.disableProperty().bind(game.getIsEndProperty());
+        turnRectangle.setFill(Color.web(game.getPlayer1().getColor()));
+        game.getIsEndProperty().addListener((o, ov, nv) -> turnRectangle.setFill(Color.WHITE));
+        game.getCurrentPlayerProperty().addListener((o, ov, nv) -> {
+            turnRectangle.setFill(Color.web(nv.getColor()));
+        });
         game.getIsEndProperty().addListener((o, ov, nv) -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Game over");
@@ -142,10 +149,10 @@ public class RootLayoutController {
         alert.setHeaderText(AppProperties.ABOUT_ALERT_HEADER);
         alert.setContentText(AppProperties.ABOUT_ALERT_TEXT);
         alert.showAndWait();
-        game.autobegin();
     }
 
     @FXML
     public void onNextMove() {
+        game.nextMove();
     }
 }
