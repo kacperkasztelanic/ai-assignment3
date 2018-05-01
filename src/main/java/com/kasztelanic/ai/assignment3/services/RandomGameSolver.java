@@ -22,6 +22,7 @@ public class RandomGameSolver extends AbstractGameSolver implements GameSolver {
         if (!game.isPlayer1Turn() && !isEnd()) {
             randomTurn();
         }
+        game.moveDone();
     }
 
     private int getPointsForPlayer1() {

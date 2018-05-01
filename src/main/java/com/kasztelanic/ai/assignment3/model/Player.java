@@ -9,12 +9,14 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 
 public class Player {
 
-    private final String name;
-    private final ReadOnlyObjectWrapper<PlayerType> type;
-    private final ReadOnlyIntegerWrapper points;
-    private final String color;
+    protected final Game game;
+    protected final String name;
+    protected final ReadOnlyObjectWrapper<PlayerType> type;
+    protected final ReadOnlyIntegerWrapper points;
+    protected final String color;
 
-    public Player(String name, PlayerType playerType, String color) {
+    public Player(Game game, String name, PlayerType playerType, String color) {
+        this.game = game;
         this.name = name;
         this.type = new ReadOnlyObjectWrapper<>(playerType);
         this.color = color;
@@ -52,5 +54,16 @@ public class Player {
     @Override
     public String toString() {
         return name;
+    }
+
+    public void move(int row, int col) {
+        updatePoints();
+    }
+
+    protected void updatePoints() {
+        // calculates points for current player
+        int pointsToAdd = 5;
+        addPoints(pointsToAdd);
+        System.out.println("Adding points:" + getPoints() + " for " + name);
     }
 }

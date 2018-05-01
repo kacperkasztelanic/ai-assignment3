@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
@@ -49,6 +50,8 @@ public class RootLayoutController {
     private Label turnLb;
 
     private Game game = null;
+    @FXML
+    private Button nextMove;
 
     @FXML
     public void onNewGame() {
@@ -101,14 +104,19 @@ public class RootLayoutController {
         player1Lb.textProperty().bind(game.getPlayer1().getTypeProperty().asString());
         player1PointsLb.textProperty().bind(game.getPlayer1().getPointsProperty().asString());
         player2Lb.textProperty().bind(game.getPlayer2().getTypeProperty().asString());
-        player2PointsLb.textProperty().bind(game.getPlayer2().getTypeProperty().asString());
+        player2PointsLb.textProperty().bind(game.getPlayer2().getPointsProperty().asString());
         turnLb.textProperty().bind(game.getCurrentPlayerProperty().asString());
         mainView.disableProperty().bind(game.getIsEndProperty());
         game.getIsEndProperty().addListener((o, ov, nv) -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Game over");
-            alert.setHeaderText("Game is over");
-            alert.setContentText("Player x is the winner!");
+            alert.setHeaderText("The game is over!");
+            if (game.getWinner() != null) {
+                alert.setContentText(String.format("The winner is %s!", game.getWinner()));
+            } else {
+                alert.setContentText(
+                        String.format("It is a draw! Both players have %d points.", game.getPlayer1().getPoints()));
+            }
             alert.show();
         });
     }
@@ -134,5 +142,10 @@ public class RootLayoutController {
         alert.setHeaderText(AppProperties.ABOUT_ALERT_HEADER);
         alert.setContentText(AppProperties.ABOUT_ALERT_TEXT);
         alert.showAndWait();
+        game.autobegin();
+    }
+
+    @FXML
+    public void onNextMove() {
     }
 }
