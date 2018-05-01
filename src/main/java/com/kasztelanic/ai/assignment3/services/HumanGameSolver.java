@@ -9,7 +9,7 @@ public class HumanGameSolver extends AbstractGameSolver implements GameSolver {
     }
 
     @Override
-    public void updateState() {
+    public void updateState(int row, int col) {
         game.changeTurn();
     }
 }

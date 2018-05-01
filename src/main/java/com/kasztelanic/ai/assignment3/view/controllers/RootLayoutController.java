@@ -98,11 +98,11 @@ public class RootLayoutController {
         treeDepthLb.textProperty().bind(game.getTreeDepthProperty().asString());
         alphaBetaIndicator.visibleProperty().bind(game.getAlphaBetaPruningProperty());
         alphaBetaIndicator.managedProperty().bind(game.getAlphaBetaPruningProperty());
-        player1Lb.textProperty().bind(game.getPlayer1TypeProperty().asString());
-        player1PointsLb.textProperty().bind(game.getPlayer1PointsProperty().asString());
-        player2Lb.textProperty().bind(game.getPlayer2TypeProperty().asString());
-        player2PointsLb.textProperty().bind(game.getPlayer2PointsProperty().asString());
-        turnLb.textProperty().bind(game.getPlayer1TurnProperty().asString());
+        player1Lb.textProperty().bind(game.getPlayer1().getTypeProperty().asString());
+        player1PointsLb.textProperty().bind(game.getPlayer1().getPointsProperty().asString());
+        player2Lb.textProperty().bind(game.getPlayer2().getTypeProperty().asString());
+        player2PointsLb.textProperty().bind(game.getPlayer2().getTypeProperty().asString());
+        turnLb.textProperty().bind(game.getCurrentPlayerProperty().asString());
         mainView.disableProperty().bind(game.getIsEndProperty());
         game.getIsEndProperty().addListener((o, ov, nv) -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

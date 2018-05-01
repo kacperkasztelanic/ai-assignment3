@@ -1,7 +1,7 @@
 package com.kasztelanic.ai.assignment3.model;
 
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
-import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
+import com.kasztelanic.ai.assignment3.properties.AppProperties;
 import com.kasztelanic.ai.assignment3.services.GameSolver;
 import com.kasztelanic.ai.assignment3.services.GameSolverFactory;
 
@@ -11,21 +11,18 @@ import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 public class Game {
 
-    private ReadOnlyIntegerWrapper player1Points;
-    private ReadOnlyIntegerWrapper player2Points;
     private ReadOnlyBooleanWrapper isEnd;
     private ReadOnlyIntegerWrapper boardSize;
     private ReadOnlyIntegerWrapper treeDepth;
     private ReadOnlyBooleanWrapper alphaBetaPruning;
-    private ReadOnlyObjectWrapper<PlayerType> player1Type;
-    private ReadOnlyObjectWrapper<PlayerType> player2Type;
-    private ReadOnlyBooleanWrapper player1Turn;
     private ReadOnlyObjectWrapper<GameCellState>[][] gameCells;
+
+    private Player player1;
+    private Player player2;
+    private ReadOnlyObjectWrapper<Player> currentPlayer;
 
     private GameSolver gameSolver;
 
@@ -38,27 +35,18 @@ public class Game {
         boardSize = new ReadOnlyIntegerWrapper(gameSettings.getBoardSize());
         treeDepth = new ReadOnlyIntegerWrapper(gameSettings.getTreeDepth());
         alphaBetaPruning = new ReadOnlyBooleanWrapper(gameSettings.isAlphaBetaPruning());
-        player1Type = new ReadOnlyObjectWrapper<>(gameSettings.getPlayer1());
-        player2Type = new ReadOnlyObjectWrapper<>(gameSettings.getPlayer2());
-        player1Turn = new ReadOnlyBooleanWrapper(true);
-        player1Points = new ReadOnlyIntegerWrapper();
-        player2Points = new ReadOnlyIntegerWrapper();
+        player1 = new Player(AppProperties.PLAYER1_NAME, gameSettings.getPlayer1(), AppProperties.PLAYER1_COLOR);
+        player2 = new Player(AppProperties.PLAYER2_NAME, gameSettings.getPlayer2(), AppProperties.PLAYER2_COLOR);
+        currentPlayer = new ReadOnlyObjectWrapper<>(player1);
         isEnd = new ReadOnlyBooleanWrapper(false);
         gameSolver = GameSolverFactory.getSolver(this);
         gameCells = new ReadOnlyObjectWrapper[boardSize.get()][boardSize.get()];
         for (int i = 0; i < boardSize.get(); i++) {
             for (int j = 0; j < boardSize.get(); j++) {
-                final int ci = i;
-                final int cj = j;
+                final int row = i;
+                final int col = j;
                 gameCells[i][j] = new ReadOnlyObjectWrapper<>(GameCellState.EMPTY);
-                // gameCells[i][j].addListener((o, ov, nv) -> gameSolver.updateState());
-                gameCells[i][j].addListener(new ChangeListener<GameCellState>() {
-                    @Override
-                    public void changed(ObservableValue<? extends GameCellState> observable, GameCellState oldValue,
-                            GameCellState newValue) {
-                        gameSolver.updateState();
-                    }
-                });
+                gameCells[i][j].addListener((o, ov, nv) -> gameSolver.updateState(row, col));
             }
         }
     }
@@ -87,46 +75,6 @@ public class Game {
         return alphaBetaPruning.get();
     }
 
-    public ReadOnlyObjectProperty<PlayerType> getPlayer1TypeProperty() {
-        return player1Type.getReadOnlyProperty();
-    }
-
-    public PlayerType getPlayer1Type() {
-        return player1Type.get();
-    }
-
-    public ReadOnlyObjectProperty<PlayerType> getPlayer2TypeProperty() {
-        return player2Type.getReadOnlyProperty();
-    }
-
-    public PlayerType getPlayer2Type() {
-        return player2Type.get();
-    }
-
-    public ReadOnlyIntegerProperty getPlayer1PointsProperty() {
-        return player1Points.getReadOnlyProperty();
-    }
-
-    public int getPlayer1Points() {
-        return player1Points.get();
-    }
-
-    public void addPlayer1Points(int points) {
-        player1Points.set(player1Points.get() + points);
-    }
-
-    public ReadOnlyIntegerProperty getPlayer2PointsProperty() {
-        return player2Points.getReadOnlyProperty();
-    }
-
-    public int getPlayer2Points() {
-        return player2Points.get();
-    }
-
-    public void addPlayer2Points(int points) {
-        player2Points.set(player2Points.get() + points);
-    }
-
     public ReadOnlyBooleanProperty getIsEndProperty() {
         return isEnd.getReadOnlyProperty();
     }
@@ -139,16 +87,28 @@ public class Game {
         isEnd.set(true);
     }
 
-    public ReadOnlyBooleanProperty getPlayer1TurnProperty() {
-        return player1Turn.getReadOnlyProperty();
+    public ReadOnlyObjectProperty<Player> getCurrentPlayerProperty() {
+        return currentPlayer.getReadOnlyProperty();
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer.get();
     }
 
     public boolean isPlayer1Turn() {
-        return player1Turn.get();
+        return currentPlayer.get() == player1;
     }
 
     public void changeTurn() {
-        player1Turn.set(!player1Turn.get());
+        currentPlayer.set(currentPlayer.get() == player1 ? player2 : player1);
+    }
+
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
     }
 
     public ReadOnlyObjectProperty<GameCellState> getGameCellStateProperty(int row, int col) {
@@ -165,10 +125,30 @@ public class Game {
         }
     }
 
+    public GameCellState[][] getBoardState() {
+        GameCellState[][] boardState = new GameCellState[boardSize.get()][boardSize.get()];
+        for (int i = 0; i < boardSize.get(); i++) {
+            for (int j = 0; j < boardSize.get(); j++) {
+                boardState[i][j] = gameCells[i][j].get();
+            }
+        }
+        return boardState;
+    }
+
+    public int[][] getBoardStateInt() {
+        int[][] boardState = new int[boardSize.get()][boardSize.get()];
+        for (int i = 0; i < boardSize.get(); i++) {
+            for (int j = 0; j < boardSize.get(); j++) {
+                boardState[i][j] = gameCells[i][j].get().toInt();
+            }
+        }
+        return boardState;
+    }
+
     @Override
     public String toString() {
-        return "GameState [player1Points=" + player1Points.get() + ", player2Points=" + player2Points.get() + ", isEnd="
-                + isEnd.get() + ", player1Turn=" + player1Turn.get() + ", boardSize=" + boardSize.get() + ", treeDepth="
-                + treeDepth.get() + "]";
+        return "GameState [player1Points=" + getPlayer1().getPoints() + ", player2Points=" + getPlayer2().getPoints()
+                + ", isEnd=" + isEnd.get() + ", player1Turn=" + (currentPlayer.get() == player1) + ", boardSize="
+                + boardSize.get() + ", treeDepth=" + treeDepth.get() + "]";
     }
 }

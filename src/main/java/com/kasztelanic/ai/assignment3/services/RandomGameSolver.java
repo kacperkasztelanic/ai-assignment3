@@ -14,10 +14,10 @@ public class RandomGameSolver extends AbstractGameSolver implements GameSolver {
     }
 
     @Override
-    public void updateState() {
-        System.out.println("Chuj dupa i kamieni kupa");
+    public void updateState(int row, int col) {
+        System.out.println("Chuj dupa i kamieni kupa: " + row + ", " + col);
         System.out.println(game);
-        game.addPlayer1Points(getPointsForPlayer1());
+        game.getPlayer1().addPoints(getPointsForPlayer1());
         game.changeTurn();
         if (!game.isPlayer1Turn() && !isEnd()) {
             randomTurn();

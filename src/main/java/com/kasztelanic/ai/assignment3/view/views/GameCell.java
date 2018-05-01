@@ -2,7 +2,7 @@ package com.kasztelanic.ai.assignment3.view.views;
 
 import com.kasztelanic.ai.assignment3.model.Game;
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
-import com.kasztelanic.ai.assignment3.properties.AppProperties;
+import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,24 +14,26 @@ public class GameCell extends Pane {
 
     private final Rectangle rect;
     private final ObjectProperty<GameCellState> state = new SimpleObjectProperty<>();
+    private final Game game;
 
     public GameCell(Game game, int row, int col) {
+        this.game = game;
         rect = new Rectangle();
         rect.setFill(Color.WHITE);
         rect.widthProperty().bind(widthProperty());
         rect.heightProperty().bind(heightProperty());
         state.bind(game.getGameCellStateProperty(row, col));
-        state.addListener((o, ov, nv) -> rect.setFill(Color
-                .web(nv.equals(GameCellState.Player1) ? AppProperties.PLAYER1_COLOR : AppProperties.PLAYER2_COLOR)));
+        state.addListener((o, ov, nv) -> rect.setFill(
+                Color.web(nv == GameCellState.Player1 ? game.getPlayer1().getColor() : game.getPlayer2().getColor())));
         getChildren().setAll(rect);
 
         setOnMousePressed(e -> {
-            if (isEmpty() && !game.isEnd()) {
+            if (isClickable()) {
                 game.setGameCellState(row, col, game.isPlayer1Turn() ? GameCellState.Player1 : GameCellState.Player2);
             }
         });
         setOnMouseEntered(e -> {
-            if (isEmpty()) {
+            if (isClickable()) {
                 getStyleClass().add("hover");
                 rect.setVisible(false);
             }
@@ -42,7 +44,15 @@ public class GameCell extends Pane {
         });
     }
 
+    private boolean isClickable() {
+        return isEmpty() && isCurrentPlayerHuman() && !game.isEnd();
+    }
+
     private boolean isEmpty() {
         return state.get() == GameCellState.EMPTY;
+    }
+
+    private boolean isCurrentPlayerHuman() {
+        return game.getCurrentPlayer().getType() == PlayerType.Human;
     }
 }
