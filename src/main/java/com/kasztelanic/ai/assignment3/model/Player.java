@@ -56,7 +56,7 @@ public class Player {
         return name;
     }
 
-    public void move(int row, int col) {
+    public void move() {
         updatePoints();
     }
 
@@ -64,6 +64,5 @@ public class Player {
         // calculates points for current player
         int pointsToAdd = 5;
         addPoints(pointsToAdd);
-        System.out.println("Adding points:" + getPoints() + " for " + name);
     }
 }

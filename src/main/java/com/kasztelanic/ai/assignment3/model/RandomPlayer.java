@@ -14,11 +14,8 @@ public class RandomPlayer extends Player {
     }
 
     @Override()
-    public void move(int row, int col) {
-        System.out.println("Random move");
+    public void move() {
         randomTurn();
-        // game.setGameCellState(game.getBoardSize() - 1, game.getBoardSize() - 1,
-        // game.isPlayer1Turn() ? GameCellState.Player1 : GameCellState.Player2);
         updatePoints();
         game.moveDone();
     }
@@ -29,12 +26,10 @@ public class RandomPlayer extends Player {
         System.out.println("Trying: " + randomRow + ", " + randomCol);
         if (!game.getGameCellState(randomRow, randomCol).equals(GameCellState.EMPTY)) {
             randomTurn();
-            // System.out.println("Not");
         } else {
             try {
                 Thread.sleep(0);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             game.setGameCellState(randomRow, randomCol,

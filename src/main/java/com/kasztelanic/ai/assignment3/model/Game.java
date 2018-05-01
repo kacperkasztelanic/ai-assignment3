@@ -46,12 +46,12 @@ public class Game {
         allFields = boardSize.get() * boardSize.get();
         for (int i = 0; i < boardSize.get(); i++) {
             for (int j = 0; j < boardSize.get(); j++) {
-                final int row = i;
-                final int col = j;
+                // final int row = i;
+                // final int col = j;
                 gameCells[i][j] = new ReadOnlyObjectWrapper<>(GameCellState.EMPTY);
                 gameCells[i][j].addListener((o, ov, nv) -> {
                     if (currentPlayer.get().getType() == PlayerType.Human) {
-                        currentPlayer.get().move(row, col);
+                        currentPlayer.get().move();
                         moveDone();
                     }
                 });
@@ -61,7 +61,7 @@ public class Game {
 
     public boolean nextMove() {
         if (currentPlayer.get().getType() != PlayerType.Human && !isEnd()) {
-            currentPlayer.get().move(0, 0);
+            currentPlayer.get().move();
         }
         return !isEnd();
     }
@@ -69,7 +69,6 @@ public class Game {
     public void moveDone() {
         fieldsFilled++;
         checkEnd();
-        System.out.println("Filled: " + fieldsFilled + "|" + allFields);
         if (!isEnd()) {
             changeTurn();
         }
@@ -85,18 +84,6 @@ public class Game {
             endGame();
         }
     }
-
-    // private int getFilled() {
-    // int res = 0;
-    // for (int i = 0; i < boardSize.get(); i++) {
-    // for (int j = 0; j < boardSize.get(); j++) {
-    // if (gameCells[i][j].get() != GameCellState.EMPTY) {
-    // res++;
-    // }
-    // }
-    // }
-    // return res;
-    // }
 
     public ReadOnlyIntegerProperty getBoardSizeProperty() {
         return boardSize.getReadOnlyProperty();
