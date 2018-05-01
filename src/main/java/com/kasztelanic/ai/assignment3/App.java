@@ -18,7 +18,8 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource(AppProperties.ROOT_LAYOUT_FXML_PATH));
 
-        Scene scene = new Scene(root, 1366, 768);
+        Scene scene = new Scene(root, AppProperties.DEFAULT_MAIN_WINDOW_WIDTH,
+                AppProperties.DEFAULT_MAIN_WINDOW_HEIGHT);
         scene.getStylesheets().add(getResource(AppProperties.STYLESHEET_PATH));
 
         stage.setTitle(AppProperties.MAIN_WINDOW_TITLE);

@@ -11,6 +11,8 @@ import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 public class Game {
 
@@ -46,8 +48,17 @@ public class Game {
         gameCells = new ReadOnlyObjectWrapper[boardSize.get()][boardSize.get()];
         for (int i = 0; i < boardSize.get(); i++) {
             for (int j = 0; j < boardSize.get(); j++) {
+                final int ci = i;
+                final int cj = j;
                 gameCells[i][j] = new ReadOnlyObjectWrapper<>(GameCellState.EMPTY);
-                gameCells[i][j].addListener((o, ov, nv) -> gameSolver.updateState());
+                // gameCells[i][j].addListener((o, ov, nv) -> gameSolver.updateState());
+                gameCells[i][j].addListener(new ChangeListener<GameCellState>() {
+                    @Override
+                    public void changed(ObservableValue<? extends GameCellState> observable, GameCellState oldValue,
+                            GameCellState newValue) {
+                        gameSolver.updateState();
+                    }
+                });
             }
         }
     }
@@ -149,7 +160,7 @@ public class Game {
     }
 
     public void setGameCellState(int row, int col, GameCellState state) {
-        if (gameCells[row][col].get().equals(GameCellState.EMPTY)) {
+        if (gameCells[row][col].get() == GameCellState.EMPTY) {
             gameCells[row][col].set(state);
         }
     }

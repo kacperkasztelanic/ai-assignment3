@@ -31,7 +31,7 @@ public class RandomGameSolver extends AbstractGameSolver implements GameSolver {
     private boolean isEnd() {
         for (int i = 0; i < game.getBoardSize(); i++) {
             for (int j = 0; j < game.getBoardSize(); j++) {
-                if (game.getGameCellState(i, j).equals(GameCellState.EMPTY)) {
+                if (game.getGameCellState(i, j) == GameCellState.EMPTY) {
                     return false;
                 }
             }
@@ -43,7 +43,7 @@ public class RandomGameSolver extends AbstractGameSolver implements GameSolver {
     private void randomTurn() {
         int randomRow = random.nextInt(game.getBoardSize());
         int randomCol = random.nextInt(game.getBoardSize());
-        if (!game.getGameCellState(randomRow, randomCol).equals(GameCellState.EMPTY)) {
+        if (!(game.getGameCellState(randomRow, randomCol) == GameCellState.EMPTY)) {
             randomTurn();
         } else {
             game.setGameCellState(randomRow, randomCol, GameCellState.Player2);

@@ -6,8 +6,6 @@ import com.kasztelanic.ai.assignment3.properties.AppProperties;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -27,13 +25,9 @@ public class GameCell extends Pane {
                 .web(nv.equals(GameCellState.Player1) ? AppProperties.PLAYER1_COLOR : AppProperties.PLAYER2_COLOR)));
         getChildren().setAll(rect);
 
-        setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (isEmpty() && !game.isEnd()) {
-                    game.setGameCellState(row, col,
-                            game.isPlayer1Turn() ? GameCellState.Player1 : GameCellState.Player2);
-                }
+        setOnMousePressed(e -> {
+            if (isEmpty() && !game.isEnd()) {
+                game.setGameCellState(row, col, game.isPlayer1Turn() ? GameCellState.Player1 : GameCellState.Player2);
             }
         });
         setOnMouseEntered(e -> {
@@ -49,6 +43,6 @@ public class GameCell extends Pane {
     }
 
     private boolean isEmpty() {
-        return state.get().equals(GameCellState.EMPTY);
+        return state.get() == GameCellState.EMPTY;
     }
 }
