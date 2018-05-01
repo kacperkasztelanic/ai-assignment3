@@ -3,7 +3,6 @@ package com.kasztelanic.ai.assignment3.model;
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 import com.kasztelanic.ai.assignment3.properties.AppProperties;
-import com.kasztelanic.ai.assignment3.services.GameSolver;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
@@ -25,7 +24,6 @@ public class Game {
     private Player winner;
     private ReadOnlyObjectWrapper<Player> currentPlayer;
 
-    private GameSolver gameSolver;
     private int fieldsFilled;
     private int allFields;
 
@@ -38,17 +36,12 @@ public class Game {
         boardSize = new ReadOnlyIntegerWrapper(gameSettings.getBoardSize());
         treeDepth = new ReadOnlyIntegerWrapper(gameSettings.getTreeDepth());
         alphaBetaPruning = new ReadOnlyBooleanWrapper(gameSettings.isAlphaBetaPruning());
-        // player1 = new Player(this, AppProperties.PLAYER1_NAME,
-        // gameSettings.getPlayer1(), AppProperties.PLAYER1_COLOR);
-        // player2 = new Player(this, AppProperties.PLAYER2_NAME,
-        // gameSettings.getPlayer2(), AppProperties.PLAYER2_COLOR);
-        player1 = new RandomPlayer(this, AppProperties.PLAYER1_NAME, gameSettings.getPlayer1(),
+        player1 = PlayerFactory.getPlayer(this, AppProperties.PLAYER1_NAME, gameSettings.getPlayer1(),
                 AppProperties.PLAYER1_COLOR);
-        player2 = new RandomPlayer(this, AppProperties.PLAYER2_NAME, gameSettings.getPlayer2(),
+        player2 = PlayerFactory.getPlayer(this, AppProperties.PLAYER2_NAME, gameSettings.getPlayer2(),
                 AppProperties.PLAYER2_COLOR);
         currentPlayer = new ReadOnlyObjectWrapper<>(player1);
         isEnd = new ReadOnlyBooleanWrapper(false);
-        // gameSolver = GameSolverFactory.getSolver(this);
         gameCells = new ReadOnlyObjectWrapper[boardSize.get()][boardSize.get()];
         allFields = boardSize.get() * boardSize.get();
         for (int i = 0; i < boardSize.get(); i++) {
