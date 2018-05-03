@@ -5,6 +5,8 @@ import java.util.Random;
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 
+import javafx.application.Platform;
+
 public class RandomPlayer extends AiPlayer {
 
     private Random random = new Random();
@@ -17,8 +19,10 @@ public class RandomPlayer extends AiPlayer {
     @Override()
     public void move() {
         randomTurn();
-        updatePoints();
-        game.moveDone();
+        Platform.runLater(() -> {
+            updatePoints();
+            game.moveDone();
+        });
     }
 
     private void randomTurn() {
@@ -29,12 +33,12 @@ public class RandomPlayer extends AiPlayer {
             randomTurn();
         } else {
             try {
-                Thread.sleep(0);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            game.setGameCellState(randomRow, randomCol,
-                    game.isPlayer1Turn() ? GameCellState.Player1 : GameCellState.Player2);
+            Platform.runLater(() -> game.setGameCellState(randomRow, randomCol,
+                    game.isPlayer1Turn() ? GameCellState.Player1 : GameCellState.Player2));
         }
 
     }

@@ -10,6 +10,7 @@ import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.concurrent.Task;
 
 public class Game {
 
@@ -59,7 +60,15 @@ public class Game {
 
     public boolean nextMove() {
         if (currentPlayer.get().getType() != PlayerType.Human && !isEnd()) {
-            currentPlayer.get().move();
+            Task<Void> task = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    currentPlayer.get().move();
+                    return null;
+                }
+            };
+            Thread t1 = new Thread(task);
+            t1.start();
         }
         return !isEnd();
     }
@@ -69,6 +78,7 @@ public class Game {
         checkEnd();
         if (!isEnd()) {
             changeTurn();
+            nextMove();
         }
     }
 
