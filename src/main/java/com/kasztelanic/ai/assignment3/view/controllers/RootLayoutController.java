@@ -11,6 +11,8 @@ import com.kasztelanic.ai.assignment3.properties.AppProperties;
 import com.kasztelanic.ai.assignment3.view.views.GamePane;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -138,7 +140,9 @@ public class RootLayoutController {
         player2Lb.textProperty().bind(game.getPlayer2().getTypeProperty().asString());
         player2PointsLb.textProperty().bind(game.getPlayer2().getPointsProperty().asString());
         mainView.disableProperty().bind(game.getIsEndProperty());
-        nextMoveBt.disableProperty().bind(game.getIsEndProperty());
+        BooleanProperty humanPlayer = new SimpleBooleanProperty(game.getCurrentPlayer().getType() == PlayerType.Human);
+        game.getCurrentPlayerProperty().addListener((o, ov, nv) -> humanPlayer.set(nv.getType() == PlayerType.Human));
+        nextMoveBt.disableProperty().bind(game.getIsEndProperty().or(humanPlayer).or(game.getIsWaitingProperty()));
         turnRectangle.setFill(Color.web(game.getPlayer1().getColor()));
         game.getIsEndProperty().addListener((o, ov, nv) -> turnRectangle.setFill(Color.WHITE));
         game.getCurrentPlayerProperty().addListener((o, ov, nv) -> {
