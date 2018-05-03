@@ -23,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -62,6 +63,8 @@ public class RootLayoutController {
     private Rectangle turnRectangle;
     @FXML
     private Button nextMoveBt;
+    @FXML
+    private VBox progressVBox;
 
     private Game game = null;
 
@@ -108,6 +111,7 @@ public class RootLayoutController {
         player1PointsLb.setText(null);
         player2PointsLb.setText(null);
         nextMoveBt.setDisable(true);
+        progressVBox.setVisible(false);
         mainView.getStyleClass().add("mainView");
     }
 
@@ -152,6 +156,7 @@ public class RootLayoutController {
             }
             alert.show();
         });
+        progressVBox.visibleProperty().bind(game.getIsWaitingProperty());
     }
 
     private void prepareBoard() {

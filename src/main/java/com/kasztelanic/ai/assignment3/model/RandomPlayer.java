@@ -5,8 +5,6 @@ import java.util.Random;
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 
-import javafx.application.Platform;
-
 public class RandomPlayer extends AiPlayer {
 
     private Random random = new Random();
@@ -16,31 +14,20 @@ public class RandomPlayer extends AiPlayer {
         super(game, name, playerType, color, alphaBetaPruning, treeDepth);
     }
 
-    @Override()
-    public void move() {
-        randomTurn();
-        Platform.runLater(() -> {
-            updatePoints();
-            game.moveDone();
-        });
-    }
-
-    private void randomTurn() {
+    @Override
+    protected Turn moveInternal() {
         int randomRow = random.nextInt(game.getBoardSize());
         int randomCol = random.nextInt(game.getBoardSize());
         System.out.println("Trying: " + randomRow + ", " + randomCol);
         if (!game.getGameCellState(randomRow, randomCol).equals(GameCellState.EMPTY)) {
-            randomTurn();
+            return moveInternal();
         } else {
             try {
-                Thread.sleep(1500);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Platform.runLater(() -> game.setGameCellState(randomRow, randomCol,
-                    game.isPlayer1Turn() ? GameCellState.Player1 : GameCellState.Player2));
+            return Turn.of(randomRow, randomCol);
         }
-
     }
-
 }

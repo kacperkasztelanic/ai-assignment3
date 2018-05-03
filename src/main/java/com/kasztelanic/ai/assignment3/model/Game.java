@@ -1,5 +1,8 @@
 package com.kasztelanic.ai.assignment3.model;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 import com.kasztelanic.ai.assignment3.properties.AppProperties;
@@ -15,6 +18,7 @@ import javafx.concurrent.Task;
 public class Game {
 
     private ReadOnlyBooleanWrapper isEnd;
+    private ReadOnlyBooleanWrapper isWaiting;
     private ReadOnlyIntegerWrapper boardSize;
     private ReadOnlyObjectWrapper<GameCellState>[][] gameCells;
 
@@ -25,6 +29,8 @@ public class Game {
 
     private int fieldsFilled;
     private int allFields;
+
+    private ExecutorService executor = Executors.newCachedThreadPool();
 
     public static Game newGame(GameSettings gameSettings) {
         return new Game(gameSettings);
@@ -40,7 +46,8 @@ public class Game {
                 AppProperties.PLAYER2_COLOR, gameSettings.isPlayer2AlphaBetaPruning(),
                 gameSettings.getPlayer2TreeDepth());
         currentPlayer = new ReadOnlyObjectWrapper<>(player1);
-        isEnd = new ReadOnlyBooleanWrapper(false);
+        isWaiting = new ReadOnlyBooleanWrapper();
+        isEnd = new ReadOnlyBooleanWrapper();
         gameCells = new ReadOnlyObjectWrapper[boardSize.get()][boardSize.get()];
         allFields = boardSize.get() * boardSize.get();
         for (int i = 0; i < boardSize.get(); i++) {
@@ -66,9 +73,18 @@ public class Game {
                     currentPlayer.get().move();
                     return null;
                 }
+
+                @Override
+                protected void running() {
+                    isWaiting.set(true);
+                }
+
+                @Override
+                protected void succeeded() {
+                    isWaiting.set(false);
+                }
             };
-            Thread t1 = new Thread(task);
-            t1.start();
+            executor.submit(task);
         }
         return !isEnd();
     }
@@ -111,6 +127,14 @@ public class Game {
 
     public void endGame() {
         isEnd.set(true);
+    }
+
+    public ReadOnlyBooleanProperty getIsWaitingProperty() {
+        return isWaiting.getReadOnlyProperty();
+    }
+
+    public boolean isWaiting() {
+        return isWaiting.get();
     }
 
     public ReadOnlyObjectProperty<Player> getCurrentPlayerProperty() {
