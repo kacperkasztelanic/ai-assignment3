@@ -32,12 +32,12 @@ public class PairManager {
 		return result;
 	}
 	
-	IntPair drawPair() {
-		int index = rand.nextInt(size);
-		IntPair result = arr[index];
-		arr[index] = arr[--size];
-		return result;
-	}
+//	IntPair drawPair() {
+//		int index = rand.nextInt(size);
+//		IntPair result = arr[index];
+//		arr[index] = arr[--size];
+//		return result;
+//	}
 	
 	ArrayList<IntPair> getUnused() {
 		ArrayList<IntPair> list = new ArrayList<>(size);
@@ -57,28 +57,28 @@ public class PairManager {
 		return res + "]";
 	}
 	
-	public static void main(String[] args) {
-		PairManager m = new PairManager(5);
-		System.out.println(m.removePair(new IntPair(1,1)));
-		System.out.println(m.removePair(new IntPair(1,1)));
-		System.out.println(m.drawPair());
-		System.out.println(m.toString());
-		System.out.println(m.getUnused().toString());
-		ArrayList<IntPair> list = m.getUnused();
-		IntPair temp = list.get(0);
-		list.set(0, list.get(12));
-		list.set(12, temp);
-		temp = list.get(22);
-		list.set(22, list.get(15));
-		list.set(15, temp);
-		IntPair pair = list.stream()
-                .max((i,j) -> i.compareTo(j))
-                .get();
-		System.out.println(pair);
-		IntPair pair2 = list.stream()
-                .min((i,j) -> i.compareTo(j))
-                .get();
-
-		System.out.println(pair2);		
-	}
+//	public static void main(String[] args) {
+//		PairManager m = new PairManager(5);
+//		System.out.println(m.removePair(new IntPair(1,1)));
+//		System.out.println(m.removePair(new IntPair(1,1)));
+//		System.out.println(m.drawPair());
+//		System.out.println(m.toString());
+//		System.out.println(m.getUnused().toString());
+//		ArrayList<IntPair> list = m.getUnused();
+//		IntPair temp = list.get(0);
+//		list.set(0, list.get(12));
+//		list.set(12, temp);
+//		temp = list.get(22);
+//		list.set(22, list.get(15));
+//		list.set(15, temp);
+//		IntPair pair = list.stream()
+//                .max((i,j) -> i.compareTo(j))
+//                .get();
+//		System.out.println(pair);
+//		IntPair pair2 = list.stream()
+//                .min((i,j) -> i.compareTo(j))
+//                .get();
+//
+//		System.out.println(pair2);		
+//	}
 }

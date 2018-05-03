@@ -34,66 +34,7 @@ public class MySolver {
     	movesToDo = size * size;
 	}
 	
-	private void calculatePts(int y, int x, int player) {
-		boolean isRow = true;
-		for(int i=0; isRow && i<size; i++) {
-			isRow = board[y][i] != EMPTY;
-		}
-		if (isRow){
-			if(player == PLAYER1){
-				points1 += size;
-			} else if (player == PLAYER2){
-				points2 += size;
-			}
-		}
-		boolean isColumn = true;
-		for(int j=0; isColumn && j<size; j++) {
-			isColumn = board[j][x] != EMPTY;
-		}
-		if (isColumn){
-			if(player == PLAYER1){
-				points1 += size;
-			} else if (player == PLAYER2){
-				points2 += size;
-			}
-		}
-		boolean isDiagonal1 = true;
-		int temp = Math.min(y, x);
-		int y2 = y - temp;
-		int x2 = x - temp;
-		while (isDiagonal1 && x2 < size && y2 < size) {
-			isDiagonal1 = board[y2++][x2++] != EMPTY;
-		}
-		if (isDiagonal1){
-			int pts = Math.min(y2, x2);
-			if (pts > 1) {
-				if(player == PLAYER1){
-					points1 += pts;
-				} else if (player == PLAYER2){
-					points2 += pts;
-				}
-			}
-		}
-		boolean isDiagonal2 = true;
-		int temp2 = Math.min(y, size - x - 1);
-		int y3 = y - temp2;
-		int x3 = x + temp2;
-		while (isDiagonal2 && x3 > -1 && y3 < size) {
-			isDiagonal2 = board[y3++][x3--] != EMPTY;
-		}
-		if (isDiagonal2){
-			int pts = Math.min(y3, size - x3 - 1);
-			if (pts > 1) {
-				if(player == PLAYER1){
-					points1 += pts;
-				} else if (player == PLAYER2){
-					points2 += pts;
-				}
-			}
-		}
-	}
-	
-	private IntPair calculate(int[][] board, int y, int x, boolean isFstPlayerMove) {
+	private IntPair calculatePts(int y, int x, boolean isFstPlayerMove) {
 		int player1Pts = 0;
 		int player2Pts = 0;
 		boolean isRow = true;
@@ -157,20 +98,18 @@ public class MySolver {
 	
 	private void __solve(boolean isFstPlayerMove) {
 		ArrayList<IntPair> avaliableMoves = pairManager.getUnused();
-//		IntPair result = solveRec(getBoardCopy(board), avaliableMoves, isFstPlayerMove, 
-		IntPair result = solveRec(board, avaliableMoves, isFstPlayerMove, 
+		IntPair result = solveRec(avaliableMoves, isFstPlayerMove, 
 				isFstPlayerMove, true, movesDone, depth);
 		IntPair moveIndexes = avaliableMoves.get(result.snd);
 		if (isFstPlayerMove) {
 			board[moveIndexes.fst][moveIndexes.snd] = MySolver.PLAYER1;
-	        calculatePts(moveIndexes.fst,moveIndexes.snd,1);
 		} else {
 			board[moveIndexes.fst][moveIndexes.snd] = MySolver.PLAYER2;
-	        calculatePts(moveIndexes.fst,moveIndexes.snd,2);
 		}
+		upadtePts(moveIndexes.fst,moveIndexes.snd, isFstPlayerMove);
 	}
 	
-	private IntPair solveRec(int[][] board, List<IntPair> avaliableMoves, boolean isFstPlayerPrediction, 
+	private IntPair solveRec(List<IntPair> avaliableMoves, boolean isFstPlayerPrediction, 
 			boolean isFstPlayerMove, boolean isMaximalization, int movesDone, int depth) {
 		if (movesDone < movesToDo && depth > 0) {
 			List<IntPair> results = new ArrayList<>(avaliableMoves.size());
@@ -179,14 +118,14 @@ public class MySolver {
 				IntPair moveIndexes = avaliableMoves.get(i);
 				if (isMoveAvaliable(moveIndexes, board)) {
 					board[moveIndexes.fst][moveIndexes.snd] = MOVE;
-					IntPair pts = calculate(board, moveIndexes.fst, moveIndexes.snd, isFstPlayerMove);
+					IntPair pts = calculatePts(moveIndexes.fst, moveIndexes.snd, isFstPlayerMove);
 					int newPts = pts.fst - pts.snd;
 					if (isFstPlayerPrediction) {
 						currentPts += newPts;
 					} else {
 						currentPts -= newPts;
 					}
-					IntPair lastChoosen = solveRec(board, avaliableMoves, isFstPlayerPrediction, !isFstPlayerMove,
+					IntPair lastChoosen = solveRec(avaliableMoves, isFstPlayerPrediction, !isFstPlayerMove,
 							!isMaximalization, movesDone + 1, depth - 1);
 					results.add(new IntPair(currentPts + lastChoosen.fst, i));
 					board[moveIndexes.fst][moveIndexes.snd] = EMPTY;
@@ -221,22 +160,18 @@ public class MySolver {
 		return board[pair.fst][pair.snd] == EMPTY;
 	}
 	
-//	private int[][] getBoardCopy(int[][] board) {
-//		int len = board.length;
-//		int[][] copy = new int[len][];
-//		for (int i = 0; i < len; i++) {
-//		    copy[i] = Arrays.copyOf(board[i], len);
-//		    }
-//		return copy;
-//	}
+	private void aiMove() {
+        if (movesDone < movesToDo) {
+//            randomSolve();
+        	__solve(false);
+            movesDone++;
+        }
+	}
 	
-	public void printBoard() {
-		for (int[] row: board) {
-			System.out.println(Arrays.toString(row));
-		}
-		System.out.println("Tour: " + tour);
-		System.out.println("P1: " + points1);
-		System.out.println("P2: " + points2);
+	private void upadtePts(int i, int j, boolean isFstPlayerMove) {
+        IntPair pts = calculatePts(i, j, isFstPlayerMove);
+        points1 += pts.fst;
+		points2 += pts.snd;
 	}
 	
 	private void userMove(Scanner sc) {
@@ -249,16 +184,8 @@ public class MySolver {
 		}
         board[i][j] = MySolver.PLAYER1;
         pairManager.removePair(new IntPair(i, j));
-        calculatePts(i,j,1);
+        upadtePts(i, j, true);
         movesDone++;
-	}
-	
-	private void aiMove() {
-        if (movesDone < movesToDo) {
-//            randomSolve();
-        	__solve(false);
-            movesDone++;
-        }
 	}
 	
 //	private void randomSolve() {
@@ -279,8 +206,17 @@ public class MySolver {
     	System.out.println("OVER");
 	}
 	
+	public void printBoard() {
+		for (int[] row: board) {
+			System.out.println(Arrays.toString(row));
+		}
+		System.out.println("Tour: " + tour);
+		System.out.println("P1: " + points1);
+		System.out.println("P2: " + points2);
+	}
+	
     public static void main(String[] args) {
-    	MySolver my = new MySolver(6, 4);
+    	MySolver my = new MySolver(3, 8);
     	my.run();
     }
 }
