@@ -117,7 +117,6 @@ public class Game {
 
     public void changeTurn() {
         currentPlayer.set(currentPlayer.get() == player1 ? player2 : player1);
-        System.out.println("Turn changed, now plays: " + currentPlayer.get().getType());
     }
 
     public Player getPlayer1() {
