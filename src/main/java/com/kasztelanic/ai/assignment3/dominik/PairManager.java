@@ -1,4 +1,4 @@
-package com.kasztelanic.ai.assignment3;
+package com.kasztelanic.ai.assignment3.dominik;
 
 import java.util.ArrayList;
 import java.util.Random;

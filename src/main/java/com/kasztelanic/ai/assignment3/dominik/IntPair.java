@@ -1,4 +1,4 @@
-package com.kasztelanic.ai.assignment3;
+package com.kasztelanic.ai.assignment3.dominik;
 
 public class IntPair implements Comparable<IntPair>{
 	int fst;
