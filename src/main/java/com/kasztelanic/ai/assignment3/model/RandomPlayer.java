@@ -5,12 +5,13 @@ import java.util.Random;
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 
-public class RandomPlayer extends Player {
+public class RandomPlayer extends AiPlayer {
 
     private Random random = new Random();
 
-    public RandomPlayer(Game game, String name, PlayerType playerType, String color) {
-        super(game, name, playerType, color);
+    public RandomPlayer(Game game, String name, PlayerType playerType, String color, boolean alphaBetaPruning,
+            int treeDepth) {
+        super(game, name, playerType, color, alphaBetaPruning, treeDepth);
     }
 
     @Override()

@@ -15,8 +15,6 @@ public class Game {
 
     private ReadOnlyBooleanWrapper isEnd;
     private ReadOnlyIntegerWrapper boardSize;
-    private ReadOnlyIntegerWrapper treeDepth;
-    private ReadOnlyBooleanWrapper alphaBetaPruning;
     private ReadOnlyObjectWrapper<GameCellState>[][] gameCells;
 
     private Player player1;
@@ -34,12 +32,12 @@ public class Game {
     @SuppressWarnings("unchecked")
     private Game(GameSettings gameSettings) {
         boardSize = new ReadOnlyIntegerWrapper(gameSettings.getBoardSize());
-        treeDepth = new ReadOnlyIntegerWrapper(gameSettings.getTreeDepth());
-        alphaBetaPruning = new ReadOnlyBooleanWrapper(gameSettings.isAlphaBetaPruning());
-        player1 = PlayerFactory.getPlayer(this, AppProperties.PLAYER1_NAME, gameSettings.getPlayer1(),
-                AppProperties.PLAYER1_COLOR);
-        player2 = PlayerFactory.getPlayer(this, AppProperties.PLAYER2_NAME, gameSettings.getPlayer2(),
-                AppProperties.PLAYER2_COLOR);
+        player1 = PlayerFactory.getPlayer(this, AppProperties.PLAYER1_NAME, gameSettings.getPlayer1Type(),
+                AppProperties.PLAYER1_COLOR, gameSettings.isPlayer1AlphaBetaPruning(),
+                gameSettings.getPlayer1TreeDepth());
+        player2 = PlayerFactory.getPlayer(this, AppProperties.PLAYER2_NAME, gameSettings.getPlayer2Type(),
+                AppProperties.PLAYER2_COLOR, gameSettings.isPlayer2AlphaBetaPruning(),
+                gameSettings.getPlayer2TreeDepth());
         currentPlayer = new ReadOnlyObjectWrapper<>(player1);
         isEnd = new ReadOnlyBooleanWrapper(false);
         gameCells = new ReadOnlyObjectWrapper[boardSize.get()][boardSize.get()];
@@ -93,22 +91,6 @@ public class Game {
         return boardSize.get();
     }
 
-    public ReadOnlyIntegerProperty getTreeDepthProperty() {
-        return treeDepth.getReadOnlyProperty();
-    }
-
-    public int getTreeDepth() {
-        return treeDepth.get();
-    }
-
-    public ReadOnlyBooleanProperty getAlphaBetaPruningProperty() {
-        return alphaBetaPruning.getReadOnlyProperty();
-    }
-
-    public boolean isAlphaBetaPruning() {
-        return alphaBetaPruning.get();
-    }
-
     public ReadOnlyBooleanProperty getIsEndProperty() {
         return isEnd.getReadOnlyProperty();
     }
@@ -135,6 +117,7 @@ public class Game {
 
     public void changeTurn() {
         currentPlayer.set(currentPlayer.get() == player1 ? player2 : player1);
+        System.out.println("Turn changed, now plays: " + currentPlayer.get().getType());
     }
 
     public Player getPlayer1() {
@@ -187,6 +170,6 @@ public class Game {
     public String toString() {
         return "GameState [player1Points=" + getPlayer1().getPoints() + ", player2Points=" + getPlayer2().getPoints()
                 + ", isEnd=" + isEnd.get() + ", player1Turn=" + (currentPlayer.get() == player1) + ", boardSize="
-                + boardSize.get() + ", treeDepth=" + treeDepth.get() + "]";
+                + boardSize.get() + "]";
     }
 }

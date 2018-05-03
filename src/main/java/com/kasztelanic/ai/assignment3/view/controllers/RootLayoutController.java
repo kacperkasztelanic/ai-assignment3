@@ -3,8 +3,10 @@ package com.kasztelanic.ai.assignment3.view.controllers;
 import java.io.IOException;
 import java.util.Optional;
 
+import com.kasztelanic.ai.assignment3.model.AiPlayer;
 import com.kasztelanic.ai.assignment3.model.Game;
 import com.kasztelanic.ai.assignment3.model.GameSettings;
+import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 import com.kasztelanic.ai.assignment3.properties.AppProperties;
 import com.kasztelanic.ai.assignment3.view.views.GamePane;
 
@@ -37,10 +39,6 @@ public class RootLayoutController {
     @FXML
     private Label boardSizeLb;
     @FXML
-    private Label treeDepthLb;
-    @FXML
-    private HBox alphaBetaIndicator;
-    @FXML
     private Label player1Lb;
     @FXML
     private Label player2Lb;
@@ -48,6 +46,18 @@ public class RootLayoutController {
     private Label player1PointsLb;
     @FXML
     private Label player2PointsLb;
+    @FXML
+    private HBox player1AiHBox;
+    @FXML
+    private Label player1TreeDepthLb;
+    @FXML
+    private HBox player1AlphaBetaIndicator;
+    @FXML
+    private HBox player2AiHBox;
+    @FXML
+    private Label player2TreeDepthLb;
+    @FXML
+    private HBox player2AlphaBetaIndicator;
     @FXML
     private Rectangle turnRectangle;
     @FXML
@@ -87,9 +97,12 @@ public class RootLayoutController {
     @FXML
     private void initialize() {
         boardSizeLb.setText(null);
-        treeDepthLb.setText(null);
-        alphaBetaIndicator.setVisible(false);
-        alphaBetaIndicator.setManaged(false);
+        player1TreeDepthLb.setText(null);
+        player2TreeDepthLb.setText(null);
+        player1AiHBox.setVisible(false);
+        player1AiHBox.setManaged(false);
+        player2AiHBox.setVisible(false);
+        player2AiHBox.setManaged(false);
         player1Lb.setText(null);
         player2Lb.setText(null);
         player1PointsLb.setText(null);
@@ -100,9 +113,22 @@ public class RootLayoutController {
 
     private void init() {
         boardSizeLb.textProperty().bind(game.getBoardSizeProperty().asString());
-        treeDepthLb.textProperty().bind(game.getTreeDepthProperty().asString());
-        alphaBetaIndicator.visibleProperty().bind(game.getAlphaBetaPruningProperty());
-        alphaBetaIndicator.managedProperty().bind(game.getAlphaBetaPruningProperty());
+        player1AiHBox.visibleProperty().bind(game.getPlayer1().getTypeProperty().isEqualTo(PlayerType.Human).not());
+        player1AiHBox.managedProperty().bind(player1AiHBox.visibleProperty());
+        player2AiHBox.visibleProperty().bind(game.getPlayer2().getTypeProperty().isEqualTo(PlayerType.Human).not());
+        player2AiHBox.managedProperty().bind(player2AiHBox.visibleProperty());
+        if (game.getPlayer1().getType() != PlayerType.Human) {
+            player1TreeDepthLb.textProperty().bind(((AiPlayer) game.getPlayer1()).getTreeDepthProperty().asString());
+            player1AlphaBetaIndicator.visibleProperty()
+                    .bind(((AiPlayer) game.getPlayer1()).getAlphaBetaPruningProperty());
+            player1AlphaBetaIndicator.managedProperty().bind(player1AlphaBetaIndicator.visibleProperty());
+        }
+        if (game.getPlayer2().getType() != PlayerType.Human) {
+            player2TreeDepthLb.textProperty().bind(((AiPlayer) game.getPlayer2()).getTreeDepthProperty().asString());
+            player2AlphaBetaIndicator.visibleProperty()
+                    .bind(((AiPlayer) game.getPlayer2()).getAlphaBetaPruningProperty());
+            player2AlphaBetaIndicator.managedProperty().bind(player2AlphaBetaIndicator.visibleProperty());
+        }
         player1Lb.textProperty().bind(game.getPlayer1().getTypeProperty().asString());
         player1PointsLb.textProperty().bind(game.getPlayer1().getPointsProperty().asString());
         player2Lb.textProperty().bind(game.getPlayer2().getTypeProperty().asString());
