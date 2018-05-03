@@ -3,10 +3,10 @@ package com.kasztelanic.ai.assignment3.view.controllers;
 import java.io.IOException;
 import java.util.Optional;
 
-import com.kasztelanic.ai.assignment3.model.AiPlayer;
 import com.kasztelanic.ai.assignment3.model.Game;
 import com.kasztelanic.ai.assignment3.model.GameSettings;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
+import com.kasztelanic.ai.assignment3.model.players.AiPlayer;
 import com.kasztelanic.ai.assignment3.properties.AppProperties;
 import com.kasztelanic.ai.assignment3.view.views.GamePane;
 

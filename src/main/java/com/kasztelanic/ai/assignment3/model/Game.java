@@ -5,6 +5,8 @@ import java.util.concurrent.Executors;
 
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
+import com.kasztelanic.ai.assignment3.model.players.Player;
+import com.kasztelanic.ai.assignment3.model.players.PlayerFactory;
 import com.kasztelanic.ai.assignment3.properties.AppProperties;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;

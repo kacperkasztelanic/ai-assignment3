@@ -1,7 +1,9 @@
-package com.kasztelanic.ai.assignment3.model;
+package com.kasztelanic.ai.assignment3.model.players;
 
 import java.util.Random;
 
+import com.kasztelanic.ai.assignment3.model.Game;
+import com.kasztelanic.ai.assignment3.model.Turn;
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 
