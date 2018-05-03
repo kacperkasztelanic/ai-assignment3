@@ -112,7 +112,7 @@ public class RootLayoutController {
         player2Lb.setText(null);
         player1PointsLb.setText(null);
         player2PointsLb.setText(null);
-        nextMoveBt.setDisable(true);
+        nextMoveBt.setVisible(false);
         progressVBox.setVisible(false);
         mainView.getStyleClass().add("mainView");
     }
@@ -142,7 +142,8 @@ public class RootLayoutController {
         mainView.disableProperty().bind(game.getIsEndProperty());
         BooleanProperty humanPlayer = new SimpleBooleanProperty(game.getCurrentPlayer().getType() == PlayerType.Human);
         game.getCurrentPlayerProperty().addListener((o, ov, nv) -> humanPlayer.set(nv.getType() == PlayerType.Human));
-        nextMoveBt.disableProperty().bind(game.getIsEndProperty().or(humanPlayer).or(game.getIsWaitingProperty()));
+        nextMoveBt.visibleProperty()
+                .bind(game.getIsEndProperty().not().and(humanPlayer).not().and(game.getIsWaitingProperty().not()));
         turnRectangle.setFill(Color.web(game.getPlayer1().getColor()));
         game.getIsEndProperty().addListener((o, ov, nv) -> turnRectangle.setFill(Color.WHITE));
         game.getCurrentPlayerProperty().addListener((o, ov, nv) -> {
