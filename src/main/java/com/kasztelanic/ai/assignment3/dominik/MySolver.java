@@ -116,7 +116,7 @@ public class MySolver {
 			for (int i = 0; i < avaliableMoves.size(); i++) {
 				int currentPts = 0;
 				IntPair moveIndexes = avaliableMoves.get(i);
-				if (isMoveAvaliable(moveIndexes, board)) {
+				if (isMoveAvaliable(moveIndexes)) {
 					board[moveIndexes.fst][moveIndexes.snd] = MOVE;
 					IntPair pts = calculatePts(moveIndexes.fst, moveIndexes.snd, isFstPlayerMove);
 					int newPts = pts.fst - pts.snd;
@@ -131,9 +131,9 @@ public class MySolver {
 					board[moveIndexes.fst][moveIndexes.snd] = EMPTY;
 				}
 			}
-			if (movesDone == this.movesDone) {
-				debugPrint(results, avaliableMoves);
-			}
+//			if (movesDone == this.movesDone) {
+//				debugPrint(results, avaliableMoves);
+//			}
 			IntPair moveChoosen;
 			if (isMaximalization) {
 				moveChoosen = results.stream().max((i,j) -> i.compareTo(j)).get();
@@ -156,7 +156,7 @@ public class MySolver {
 		}
 	}
 	
-	private boolean isMoveAvaliable(IntPair pair, int[][] board) {
+	private boolean isMoveAvaliable(IntPair pair) {
 		return board[pair.fst][pair.snd] == EMPTY;
 	}
 	
@@ -166,7 +166,7 @@ public class MySolver {
         	__solve(false);
             movesDone++;
         }
-	}
+	} 
 	
 	private void upadtePts(int i, int j, boolean isFstPlayerMove) {
         IntPair pts = calculatePts(i, j, isFstPlayerMove);
@@ -177,7 +177,7 @@ public class MySolver {
 	private void userMove(Scanner sc) {
 		int i = sc.nextInt();
         int j = sc.nextInt();
-        while(i >= size || j >= size || board[i][j] != MySolver.EMPTY) {
+        while(i >= size || j >= size || !isMoveAvaliable(new IntPair(i,j))) {
         	System.out.println("again");
 			i = sc.nextInt();
 	        j = sc.nextInt();
@@ -188,6 +188,9 @@ public class MySolver {
         movesDone++;
 	}
 	
+	public void checkInput() {
+		
+	}
 //	private void randomSolve() {
 //		IntPair pair = pairManager.drawPair();
 //		board[pair.fst][pair.snd] = MySolver.PLAYER2;
@@ -216,7 +219,7 @@ public class MySolver {
 	}
 	
     public static void main(String[] args) {
-    	MySolver my = new MySolver(3, 8);
+    	MySolver my = new MySolver(4, 4);
     	my.run();
     }
 }
