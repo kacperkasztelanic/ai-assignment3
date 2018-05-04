@@ -44,6 +44,7 @@ public class Game {
     @SuppressWarnings("unchecked")
     private Game(GameSettings gameSettings) {
         boardSize = new ReadOnlyIntegerWrapper(gameSettings.getBoardSize());
+        board = new int[boardSize.get()][boardSize.get()];
         PairManager pairManager = new PairManager(boardSize.get());
         player1 = PlayerFactory.getPlayer(this, AppProperties.PLAYER1_NAME, gameSettings.getPlayer1Type(),
                 GameCellState.Player1, AppProperties.PLAYER1_COLOR, pairManager,
@@ -68,7 +69,6 @@ public class Game {
                 });
             }
         }
-        board = new int[boardSize.get()][boardSize.get()];
     }
 
     public boolean nextMove() {
@@ -184,26 +184,6 @@ public class Game {
             gameCells[row][col].set(state);
         }
     }
-
-    public GameCellState[][] getBoardState() {
-        GameCellState[][] boardState = new GameCellState[boardSize.get()][boardSize.get()];
-        for (int i = 0; i < boardSize.get(); i++) {
-            for (int j = 0; j < boardSize.get(); j++) {
-                boardState[i][j] = gameCells[i][j].get();
-            }
-        }
-        return boardState;
-    }
-
-    // public int[][] getBoardStateInt() {
-    // int[][] boardState = new int[boardSize.get()][boardSize.get()];
-    // for (int i = 0; i < boardSize.get(); i++) {
-    // for (int j = 0; j < boardSize.get(); j++) {
-    // boardState[i][j] = gameCells[i][j].get().toInt();
-    // }
-    // }
-    // return boardState;
-    // }
 
     public int getMovesDone() {
         return movesDone;
