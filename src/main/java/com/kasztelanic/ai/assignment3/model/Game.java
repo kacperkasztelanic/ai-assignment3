@@ -3,6 +3,7 @@ package com.kasztelanic.ai.assignment3.model;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.kasztelanic.ai.assignment3.dominik.PairManager;
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 import com.kasztelanic.ai.assignment3.model.players.Player;
@@ -41,12 +42,13 @@ public class Game {
     @SuppressWarnings("unchecked")
     private Game(GameSettings gameSettings) {
         boardSize = new ReadOnlyIntegerWrapper(gameSettings.getBoardSize());
+        PairManager pairManager = new PairManager(boardSize.get());
         player1 = PlayerFactory.getPlayer(this, AppProperties.PLAYER1_NAME, gameSettings.getPlayer1Type(),
-                AppProperties.PLAYER1_COLOR, gameSettings.isPlayer1AlphaBetaPruning(),
-                gameSettings.getPlayer1TreeDepth());
+                GameCellState.Player1, AppProperties.PLAYER1_COLOR, pairManager,
+                gameSettings.isPlayer1AlphaBetaPruning(), gameSettings.getPlayer1TreeDepth());
         player2 = PlayerFactory.getPlayer(this, AppProperties.PLAYER2_NAME, gameSettings.getPlayer2Type(),
-                AppProperties.PLAYER2_COLOR, gameSettings.isPlayer2AlphaBetaPruning(),
-                gameSettings.getPlayer2TreeDepth());
+                GameCellState.Player2, AppProperties.PLAYER2_COLOR, pairManager,
+                gameSettings.isPlayer2AlphaBetaPruning(), gameSettings.getPlayer2TreeDepth());
         currentPlayer = new ReadOnlyObjectWrapper<>(player1);
         isWaiting = new ReadOnlyBooleanWrapper();
         isEnd = new ReadOnlyBooleanWrapper();
@@ -54,12 +56,11 @@ public class Game {
         allFields = boardSize.get() * boardSize.get();
         for (int i = 0; i < boardSize.get(); i++) {
             for (int j = 0; j < boardSize.get(); j++) {
-                // final int row = i;
-                // final int col = j;
+                Turn turn = Turn.of(i, j);
                 gameCells[i][j] = new ReadOnlyObjectWrapper<>(GameCellState.EMPTY);
                 gameCells[i][j].addListener((o, ov, nv) -> {
                     if (currentPlayer.get().getType() == PlayerType.Human) {
-                        currentPlayer.get().move();
+                        currentPlayer.get().move(turn);
                         moveDone();
                     }
                 });
@@ -72,7 +73,7 @@ public class Game {
             Task<Void> task = new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
-                    currentPlayer.get().move();
+                    currentPlayer.get().move(null);
                     return null;
                 }
 

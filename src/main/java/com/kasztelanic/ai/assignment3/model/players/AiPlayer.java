@@ -1,55 +1,104 @@
 package com.kasztelanic.ai.assignment3.model.players;
 
+import java.util.List;
+
+import com.kasztelanic.ai.assignment3.dominik.IntPair;
+import com.kasztelanic.ai.assignment3.dominik.PairManager;
 import com.kasztelanic.ai.assignment3.model.Game;
 import com.kasztelanic.ai.assignment3.model.Turn;
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 
-import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyIntegerWrapper;
+public class AiPlayer extends AbstractAiPlayer {
 
-public abstract class AiPlayer extends Player {
+    private List<IntPair> avaliableMoves;
+    private int movesDone;
+    private int movesToDo;
+    private int[][] board = null;
 
-    protected final ReadOnlyBooleanWrapper alphaBetaPruning;
-    protected final ReadOnlyIntegerWrapper treeDepth;
-
-    public AiPlayer(Game game, String name, PlayerType playerType, String color, boolean alphaBetaPruning,
-            int treeDepth) {
-        super(game, name, playerType, color);
-        this.alphaBetaPruning = new ReadOnlyBooleanWrapper(alphaBetaPruning);
-        this.treeDepth = new ReadOnlyIntegerWrapper(treeDepth);
-    }
-
-    public ReadOnlyBooleanProperty getAlphaBetaPruningProperty() {
-        return alphaBetaPruning.getReadOnlyProperty();
-    }
-
-    public boolean isAlphaBetaPruning() {
-        return alphaBetaPruning.get();
-    }
-
-    public ReadOnlyIntegerProperty getTreeDepthProperty() {
-        return treeDepth.getReadOnlyProperty();
-    }
-
-    public int getTreeDepth() {
-        return treeDepth.get();
+    public AiPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
+            PairManager pairManager, boolean alphaBetaPruning, int treeDepth) {
+        super(game, name, playerType, gameCellState, color, pairManager, alphaBetaPruning, treeDepth);
     }
 
     @Override
-    public void move() {
-        Turn turn = moveInternal();
-
-        Platform.runLater(() -> {
-            game.setGameCellState(turn.getRow(), turn.getColumn(),
-                    game.isPlayer1Turn() ? GameCellState.Player1 : GameCellState.Player2);
-            updatePoints();
-            game.moveDone();
-        });
+    protected Turn moveInternal() {
+        return solve(movesDone);
     }
 
-    protected abstract Turn moveInternal();
+    private Turn solve(int movesDone) {
+        this.board = game.getBoardStateInt();
+        this.movesDone = movesDone;
+        this.avaliableMoves = pairManager.getUnused();
+        // IntPair result = solveRec(true, movesDone, depth);
+        IntPair result = solveRecMax(movesDone, treeDepth.get());
+        IntPair moveIndexes = avaliableMoves.get(result.snd);
+
+        Turn turn = Turn.of(moveIndexes.fst, moveIndexes.snd);
+        pairManager.removePair(moveIndexes);
+        return turn;
+    }
+
+    private IntPair solveRecMax(int movesDone, int depth) {
+        IntPair moveChoosen = null;
+        IntPair currMove;
+        int currentPts = 0;
+        for (int i = 0; i < avaliableMoves.size(); i++) {
+            currentPts = 0;
+            IntPair moveIndexes = avaliableMoves.get(i);
+            if (isMoveAvaliable(moveIndexes)) {
+                board[moveIndexes.fst][moveIndexes.snd] = game.getCurrentPlayer().getGameCellState().toInt();
+                int pts = calculatePts(moveIndexes.fst, moveIndexes.snd);
+                currentPts += pts;
+                if (movesDone + 1 < movesToDo && depth > 1) {
+                    IntPair lastChoosen = solveRecMin(movesDone + 1, depth - 1);
+                    currMove = new IntPair(currentPts + lastChoosen.fst, i);
+                } else {
+                    currMove = new IntPair(currentPts, i);
+                }
+                if (moveChoosen == null) {
+                    moveChoosen = currMove;
+                } else if (currMove.compareTo(moveChoosen) >= 0) {
+                    moveChoosen = currMove;
+                }
+                board[moveIndexes.fst][moveIndexes.snd] = GameCellState.EMPTY.toInt();
+            }
+        }
+        // if (movesDone == this.movesDone) {
+        // debugPrint(results, avaliableMoves);
+        // }
+        // moveChoosen = results.stream().max((i,j) -> i.compareTo(j)).get();
+        if (movesDone == this.movesDone) {
+            System.out.println("move choosen:" + moveChoosen.fst + "\t" + avaliableMoves.get(moveChoosen.snd));
+        }
+        return moveChoosen;
+    }
+
+    private IntPair solveRecMin(int movesDone, int depth) {
+        IntPair moveChoosen = null;
+        IntPair currMove;
+        int currentPts = 0;
+        for (int i = 0; i < avaliableMoves.size(); i++) {
+            currentPts = 0;
+            IntPair moveIndexes = avaliableMoves.get(i);
+            if (isMoveAvaliable(moveIndexes)) {
+                board[moveIndexes.fst][moveIndexes.snd] = game.getCurrentPlayer().getGameCellState().toInt();
+                int pts = calculatePts(moveIndexes.fst, moveIndexes.snd);
+                currentPts -= pts;
+                if (movesDone + 1 < movesToDo && depth > 1) {
+                    IntPair lastChoosen = solveRecMax(movesDone + 1, depth - 1);
+                    currMove = new IntPair(currentPts + lastChoosen.fst, i);
+                } else {
+                    currMove = new IntPair(currentPts, i);
+                }
+                if (moveChoosen == null) {
+                    moveChoosen = currMove;
+                } else if (currMove.compareTo(moveChoosen) < 0) {
+                    moveChoosen = currMove;
+                }
+                board[moveIndexes.fst][moveIndexes.snd] = GameCellState.EMPTY.toInt();
+            }
+        }
+        return moveChoosen;
+    }
 }

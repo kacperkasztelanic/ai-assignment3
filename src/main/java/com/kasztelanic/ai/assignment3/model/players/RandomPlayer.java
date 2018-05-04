@@ -2,18 +2,19 @@ package com.kasztelanic.ai.assignment3.model.players;
 
 import java.util.Random;
 
+import com.kasztelanic.ai.assignment3.dominik.PairManager;
 import com.kasztelanic.ai.assignment3.model.Game;
 import com.kasztelanic.ai.assignment3.model.Turn;
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 
-public class RandomPlayer extends AiPlayer {
+public class RandomPlayer extends AbstractAiPlayer {
 
     private Random random = new Random();
 
-    public RandomPlayer(Game game, String name, PlayerType playerType, String color, boolean alphaBetaPruning,
-            int treeDepth) {
-        super(game, name, playerType, color, alphaBetaPruning, treeDepth);
+    public RandomPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
+            PairManager pairManager, boolean alphaBetaPruning, int treeDepth) {
+        super(game, name, playerType, gameCellState, color, pairManager, alphaBetaPruning, treeDepth);
     }
 
     @Override

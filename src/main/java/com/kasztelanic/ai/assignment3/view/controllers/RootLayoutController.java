@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.kasztelanic.ai.assignment3.model.Game;
 import com.kasztelanic.ai.assignment3.model.GameSettings;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
-import com.kasztelanic.ai.assignment3.model.players.AiPlayer;
+import com.kasztelanic.ai.assignment3.model.players.AbstractAiPlayer;
 import com.kasztelanic.ai.assignment3.properties.AppProperties;
 import com.kasztelanic.ai.assignment3.view.views.GamePane;
 
@@ -124,15 +124,15 @@ public class RootLayoutController {
         player2AiHBox.visibleProperty().bind(game.getPlayer2().getTypeProperty().isEqualTo(PlayerType.Human).not());
         player2AiHBox.managedProperty().bind(player2AiHBox.visibleProperty());
         if (game.getPlayer1().getType() != PlayerType.Human) {
-            player1TreeDepthLb.textProperty().bind(((AiPlayer) game.getPlayer1()).getTreeDepthProperty().asString());
+            player1TreeDepthLb.textProperty().bind(((AbstractAiPlayer) game.getPlayer1()).getTreeDepthProperty().asString());
             player1AlphaBetaIndicator.visibleProperty()
-                    .bind(((AiPlayer) game.getPlayer1()).getAlphaBetaPruningProperty());
+                    .bind(((AbstractAiPlayer) game.getPlayer1()).getAlphaBetaPruningProperty());
             player1AlphaBetaIndicator.managedProperty().bind(player1AlphaBetaIndicator.visibleProperty());
         }
         if (game.getPlayer2().getType() != PlayerType.Human) {
-            player2TreeDepthLb.textProperty().bind(((AiPlayer) game.getPlayer2()).getTreeDepthProperty().asString());
+            player2TreeDepthLb.textProperty().bind(((AbstractAiPlayer) game.getPlayer2()).getTreeDepthProperty().asString());
             player2AlphaBetaIndicator.visibleProperty()
-                    .bind(((AiPlayer) game.getPlayer2()).getAlphaBetaPruningProperty());
+                    .bind(((AbstractAiPlayer) game.getPlayer2()).getAlphaBetaPruningProperty());
             player2AlphaBetaIndicator.managedProperty().bind(player2AlphaBetaIndicator.visibleProperty());
         }
         player1Lb.textProperty().bind(game.getPlayer1().getTypeProperty().asString());
@@ -143,7 +143,7 @@ public class RootLayoutController {
         BooleanProperty humanPlayer = new SimpleBooleanProperty(game.getCurrentPlayer().getType() == PlayerType.Human);
         game.getCurrentPlayerProperty().addListener((o, ov, nv) -> humanPlayer.set(nv.getType() == PlayerType.Human));
         nextMoveBt.visibleProperty()
-                .bind(game.getIsEndProperty().not().and(humanPlayer).not().and(game.getIsWaitingProperty().not()));
+                .bind(((game.getIsEndProperty().not()).and(game.getIsWaitingProperty().not())).and(humanPlayer.not()));
         turnRectangle.setFill(Color.web(game.getPlayer1().getColor()));
         game.getIsEndProperty().addListener((o, ov, nv) -> turnRectangle.setFill(Color.WHITE));
         game.getCurrentPlayerProperty().addListener((o, ov, nv) -> {
