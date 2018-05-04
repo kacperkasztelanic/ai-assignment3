@@ -31,6 +31,7 @@ public class AiPlayer extends AbstractAiPlayer {
         this.avaliableMoves = pairManager.getUnused();
         // IntPair result = solveRec(true, movesDone, depth);
         IntPair result = solveRecMax(game.getMovesDone(), treeDepth.get());
+        // System.out.println("Depth:" + treeDepth.get());
         IntPair moveIndexes = avaliableMoves.get(result.snd);
 
         Turn turn = Turn.of(moveIndexes.fst, moveIndexes.snd);
@@ -43,6 +44,7 @@ public class AiPlayer extends AbstractAiPlayer {
         IntPair currMove;
         int currentPts = 0;
         for (int i = 0; i < avaliableMoves.size(); i++) {
+            System.out.println("movesDone:" + movesDone + "|depth:" + depth);
             currentPts = 0;
             IntPair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {

@@ -22,6 +22,7 @@ public abstract class AbstractAiPlayer extends Player {
         super(game, name, playerType, gameCellState, color, pairManager);
         this.alphaBetaPruning = new ReadOnlyBooleanWrapper(alphaBetaPruning);
         this.treeDepth = new ReadOnlyIntegerWrapper(treeDepth);
+        System.out.println("Depth" + treeDepth);
     }
 
     public ReadOnlyBooleanProperty getAlphaBetaPruningProperty() {
@@ -42,6 +43,7 @@ public abstract class AbstractAiPlayer extends Player {
 
     @Override
     public void move(Turn turn) {
+        board = game.getBoardStateInt();
         Turn t = moveInternal();
 
         Platform.runLater(() -> {

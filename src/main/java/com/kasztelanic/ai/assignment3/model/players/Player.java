@@ -21,6 +21,7 @@ public class Player {
     protected final ReadOnlyIntegerWrapper points;
     protected final String color;
     protected final PairManager pairManager;
+    int[][] board = null;
 
     public Player(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
             PairManager pairManager) {
@@ -79,6 +80,7 @@ public class Player {
     }
 
     public void move(Turn turn) {
+        board = game.getBoardStateInt();
         updatePoints(turn);
     }
 
@@ -90,7 +92,6 @@ public class Player {
         int points = 0;
         boolean isRow = true;
         int size = game.getBoardSize();
-        int[][] board = game.getBoardStateInt();
         for (int i = 0; isRow && i < size; i++) {
             isRow = board[y][i] != GameCellState.EMPTY.toInt();
         }
@@ -130,6 +131,7 @@ public class Player {
                 points += pts;
             }
         }
+        System.out.println(points);
         return points;
     }
 }
