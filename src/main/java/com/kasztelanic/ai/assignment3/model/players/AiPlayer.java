@@ -19,6 +19,7 @@ public class AiPlayer extends AbstractAiPlayer {
     public AiPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
             PairManager pairManager, boolean alphaBetaPruning, int treeDepth) {
         super(game, name, playerType, gameCellState, color, pairManager, alphaBetaPruning, treeDepth);
+        movesDone = game.getBoardSize() * game.getBoardSize();
     }
 
     @Override
@@ -32,6 +33,7 @@ public class AiPlayer extends AbstractAiPlayer {
         this.avaliableMoves = pairManager.getUnused();
         // IntPair result = solveRec(true, movesDone, depth);
         IntPair result = solveRecMax(movesDone, treeDepth.get());
+        System.out.println(treeDepth.get());
         IntPair moveIndexes = avaliableMoves.get(result.snd);
 
         Turn turn = Turn.of(moveIndexes.fst, moveIndexes.snd);
