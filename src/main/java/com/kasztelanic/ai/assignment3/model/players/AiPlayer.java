@@ -61,9 +61,9 @@ public class AiPlayer extends AbstractAiPlayer {
                 }
                 board[moveIndexes.fst][moveIndexes.snd] = GameCellState.EMPTY.toInt();
             }
-            if (movesDone == game.getMovesDone()) {
-                System.out.println("move choosen:" + moveChoosen.fst + "\t" + avaliableMoves.get(moveChoosen.snd));
-            }
+        }
+        if (movesDone == game.getMovesDone()) {
+            System.out.println("move choosen:" + moveChoosen.fst + "\t" + avaliableMoves.get(moveChoosen.snd));
         }
         return moveChoosen;
     }
