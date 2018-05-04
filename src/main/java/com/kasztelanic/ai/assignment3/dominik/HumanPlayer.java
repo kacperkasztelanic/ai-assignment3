@@ -13,7 +13,7 @@ public class HumanPlayer extends Player {
 	public void move(int movesDone) {
 		int i = sc.nextInt();
         int j = sc.nextInt();
-        while(i >= size || j >= size || board[i][j] != MySolver.EMPTY) {
+        while(i >= size || j >= size || board[i][j] != EMPTY) {
         	System.out.println("again");
 			i = sc.nextInt();
 	        j = sc.nextInt();

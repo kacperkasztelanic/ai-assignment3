@@ -62,7 +62,7 @@ public class Game {
 	}
 	
     public static void main(String[] args) {
-    	Game game = new Game(17, 3);
+    	Game game = new Game(5, 6);
     	game.run();
     }
 }
