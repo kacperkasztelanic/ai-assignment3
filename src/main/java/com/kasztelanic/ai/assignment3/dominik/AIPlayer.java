@@ -96,7 +96,7 @@ public class AIPlayer extends Player {
         // if (movesDone == this.movesDone) {
         // debugPrint(results, avaliableMoves);
         // }
-        // moveChoosen = results.stream().max((i,j) -> i.compareTo(j)).get();
+        // moveChoosen = results.stream().max((i, j) -> i.compareTo(j)).get();
         if (movesDone == this.movesDone) {
             System.out.println("move choosen:" + moveChoosen.fst + "\t" + avaliableMoves.get(moveChoosen.snd));
         }

@@ -12,28 +12,25 @@ import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 public class AiPlayer extends AbstractAiPlayer {
 
     private List<IntPair> avaliableMoves;
-    private int movesDone;
     private int movesToDo;
     private int[][] board = null;
 
     public AiPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
             PairManager pairManager, boolean alphaBetaPruning, int treeDepth) {
         super(game, name, playerType, gameCellState, color, pairManager, alphaBetaPruning, treeDepth);
-        movesDone = game.getBoardSize() * game.getBoardSize();
+        movesToDo = game.getBoardSize() * game.getBoardSize();
     }
 
     @Override
     protected Turn moveInternal() {
-        return solve(movesDone);
+        return solve();
     }
 
-    private Turn solve(int movesDone) {
+    private Turn solve() {
         this.board = game.getBoardStateInt();
-        this.movesDone = movesDone;
         this.avaliableMoves = pairManager.getUnused();
         // IntPair result = solveRec(true, movesDone, depth);
-        IntPair result = solveRecMax(movesDone, treeDepth.get());
-        System.out.println(treeDepth.get());
+        IntPair result = solveRecMax(game.getMovesDone(), treeDepth.get());
         IntPair moveIndexes = avaliableMoves.get(result.snd);
 
         Turn turn = Turn.of(moveIndexes.fst, moveIndexes.snd);
@@ -66,13 +63,6 @@ public class AiPlayer extends AbstractAiPlayer {
                 board[moveIndexes.fst][moveIndexes.snd] = GameCellState.EMPTY.toInt();
             }
         }
-        // if (movesDone == this.movesDone) {
-        // debugPrint(results, avaliableMoves);
-        // }
-        // moveChoosen = results.stream().max((i,j) -> i.compareTo(j)).get();
-        if (movesDone == this.movesDone) {
-            System.out.println("move choosen:" + moveChoosen.fst + "\t" + avaliableMoves.get(moveChoosen.snd));
-        }
         return moveChoosen;
     }
 
@@ -102,5 +92,12 @@ public class AiPlayer extends AbstractAiPlayer {
             }
         }
         return moveChoosen;
+    }
+
+    @SuppressWarnings("unused")
+    private void debugPrint(List<IntPair> results, List<IntPair> moves) {
+        for (IntPair e : results) {
+            System.out.println("  " + e.fst + "\t" + moves.get(e.snd));
+        }
     }
 }

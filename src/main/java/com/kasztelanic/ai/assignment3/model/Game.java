@@ -30,7 +30,7 @@ public class Game {
     private Player winner;
     private ReadOnlyObjectWrapper<Player> currentPlayer;
 
-    private int fieldsFilled;
+    private int movesDone;
     private int allFields;
 
     private ExecutorService executor = Executors.newCachedThreadPool();
@@ -93,7 +93,7 @@ public class Game {
     }
 
     public void moveDone() {
-        fieldsFilled++;
+        movesDone++;
         checkEnd();
         if (!isEnd()) {
             changeTurn();
@@ -102,7 +102,7 @@ public class Game {
     }
 
     private void checkEnd() {
-        if (fieldsFilled >= allFields) {
+        if (movesDone >= allFields) {
             if (player1.getPoints() > player2.getPoints()) {
                 winner = player1;
             } else if (player2.getPoints() < player1.getPoints()) {
@@ -200,6 +200,10 @@ public class Game {
             }
         }
         return boardState;
+    }
+
+    public int getMovesDone() {
+        return movesDone;
     }
 
     @Override
