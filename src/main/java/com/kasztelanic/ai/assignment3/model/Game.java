@@ -33,6 +33,8 @@ public class Game {
     private int movesDone;
     private int allFields;
 
+    public final int[][] board;
+
     private ExecutorService executor = Executors.newCachedThreadPool();
 
     public static Game newGame(GameSettings gameSettings) {
@@ -66,6 +68,7 @@ public class Game {
                 });
             }
         }
+        board = new int[boardSize.get()][boardSize.get()];
     }
 
     public boolean nextMove() {
@@ -192,15 +195,15 @@ public class Game {
         return boardState;
     }
 
-    public int[][] getBoardStateInt() {
-        int[][] boardState = new int[boardSize.get()][boardSize.get()];
-        for (int i = 0; i < boardSize.get(); i++) {
-            for (int j = 0; j < boardSize.get(); j++) {
-                boardState[i][j] = gameCells[i][j].get().toInt();
-            }
-        }
-        return boardState;
-    }
+    // public int[][] getBoardStateInt() {
+    // int[][] boardState = new int[boardSize.get()][boardSize.get()];
+    // for (int i = 0; i < boardSize.get(); i++) {
+    // for (int j = 0; j < boardSize.get(); j++) {
+    // boardState[i][j] = gameCells[i][j].get().toInt();
+    // }
+    // }
+    // return boardState;
+    // }
 
     public int getMovesDone() {
         return movesDone;

@@ -21,7 +21,6 @@ public class Player {
     protected final ReadOnlyIntegerWrapper points;
     protected final String color;
     protected final PairManager pairManager;
-    protected int[][] board = null;
 
     public Player(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
             PairManager pairManager) {
@@ -76,11 +75,11 @@ public class Player {
     }
 
     protected boolean isMoveAvaliable(IntPair pair) {
-        return game.getGameCellState(pair.fst, pair.snd) == GameCellState.EMPTY;
+        return game.board[pair.fst][pair.snd] == GameCellState.EMPTY.toInt();
     }
 
     public void move(Turn turn) {
-        board = game.getBoardStateInt();
+        game.board[turn.getRow()][turn.getColumn()] = gameCellState.get().toInt();
         pairManager.removePair(IntPair.of(turn.getRow(), turn.getColumn()));
         updatePoints(turn);
     }
@@ -94,14 +93,14 @@ public class Player {
         boolean isRow = true;
         int size = game.getBoardSize();
         for (int i = 0; isRow && i < size; i++) {
-            isRow = board[y][i] != GameCellState.EMPTY.toInt();
+            isRow = game.board[y][i] != GameCellState.EMPTY.toInt();
         }
         if (isRow) {
             points += size;
         }
         boolean isColumn = true;
         for (int j = 0; isColumn && j < size; j++) {
-            isColumn = board[j][x] != GameCellState.EMPTY.toInt();
+            isColumn = game.board[j][x] != GameCellState.EMPTY.toInt();
         }
         if (isColumn) {
             points += size;
@@ -111,7 +110,7 @@ public class Player {
         int y2 = y - temp;
         int x2 = x - temp;
         while (isDiagonal1 && x2 < size && y2 < size) {
-            isDiagonal1 = board[y2++][x2++] != GameCellState.EMPTY.toInt();
+            isDiagonal1 = game.board[y2++][x2++] != GameCellState.EMPTY.toInt();
         }
         if (isDiagonal1) {
             int pts = Math.min(y2, x2);
@@ -124,7 +123,7 @@ public class Player {
         int y3 = y - temp2;
         int x3 = x + temp2;
         while (isDiagonal2 && x3 > -1 && y3 < size) {
-            isDiagonal2 = board[y3++][x3--] != GameCellState.EMPTY.toInt();
+            isDiagonal2 = game.board[y3++][x3--] != GameCellState.EMPTY.toInt();
         }
         if (isDiagonal2) {
             int pts = Math.min(y3, size - x3 - 1);

@@ -27,9 +27,7 @@ public class AiPlayer extends AbstractAiPlayer {
 
     private Turn solve() {
         this.avaliableMoves = pairManager.getUnused();
-        // IntPair result = solveRec(true, movesDone, depth);
         IntPair result = solveRecMax(game.getMovesDone(), treeDepth.get());
-        // System.out.println("Depth:" + treeDepth.get());
         IntPair moveIndexes = avaliableMoves.get(result.snd);
 
         Turn turn = Turn.of(moveIndexes.fst, moveIndexes.snd);
@@ -45,7 +43,7 @@ public class AiPlayer extends AbstractAiPlayer {
             currentPts = 0;
             IntPair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
-                board[moveIndexes.fst][moveIndexes.snd] = game.getCurrentPlayer().getGameCellState().toInt();
+                game.board[moveIndexes.fst][moveIndexes.snd] = gameCellState.get().toInt();
                 int pts = calculatePts(moveIndexes.fst, moveIndexes.snd);
                 currentPts += pts;
                 if (movesDone + 1 < movesToDo && depth > 1) {
@@ -59,11 +57,8 @@ public class AiPlayer extends AbstractAiPlayer {
                 } else if (currMove.compareTo(moveChoosen) >= 0) {
                     moveChoosen = currMove;
                 }
-                board[moveIndexes.fst][moveIndexes.snd] = GameCellState.EMPTY.toInt();
+                game.board[moveIndexes.fst][moveIndexes.snd] = GameCellState.EMPTY.toInt();
             }
-        }
-        if (movesDone == game.getMovesDone()) {
-            System.out.println("move choosen:" + moveChoosen.fst + "\t" + avaliableMoves.get(moveChoosen.snd));
         }
         return moveChoosen;
     }
@@ -76,7 +71,7 @@ public class AiPlayer extends AbstractAiPlayer {
             currentPts = 0;
             IntPair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
-                board[moveIndexes.fst][moveIndexes.snd] = game.getCurrentPlayer().getGameCellState().toInt();
+                game.board[moveIndexes.fst][moveIndexes.snd] = gameCellState.get().toInt();
                 int pts = calculatePts(moveIndexes.fst, moveIndexes.snd);
                 currentPts -= pts;
                 if (movesDone + 1 < movesToDo && depth > 1) {
@@ -90,16 +85,9 @@ public class AiPlayer extends AbstractAiPlayer {
                 } else if (currMove.compareTo(moveChoosen) < 0) {
                     moveChoosen = currMove;
                 }
-                board[moveIndexes.fst][moveIndexes.snd] = GameCellState.EMPTY.toInt();
+                game.board[moveIndexes.fst][moveIndexes.snd] = GameCellState.EMPTY.toInt();
             }
         }
         return moveChoosen;
-    }
-
-    @SuppressWarnings("unused")
-    private void debugPrint(List<IntPair> results, List<IntPair> moves) {
-        for (IntPair e : results) {
-            System.out.println("  " + e.fst + "\t" + moves.get(e.snd));
-        }
     }
 }
