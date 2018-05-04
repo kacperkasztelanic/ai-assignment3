@@ -81,6 +81,7 @@ public class Player {
 
     public void move(Turn turn) {
         board = game.getBoardStateInt();
+        pairManager.removePair(IntPair.of(turn.getRow(), turn.getColumn()));
         updatePoints(turn);
     }
 
