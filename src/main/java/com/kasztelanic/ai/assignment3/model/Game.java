@@ -105,7 +105,7 @@ public class Game {
         if (movesDone >= allFields) {
             if (player1.getPoints() > player2.getPoints()) {
                 winner = player1;
-            } else if (player2.getPoints() < player1.getPoints()) {
+            } else if (player2.getPoints() > player1.getPoints()) {
                 winner = player2;
             }
             endGame();

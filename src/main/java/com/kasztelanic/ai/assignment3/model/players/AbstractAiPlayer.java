@@ -49,6 +49,7 @@ public abstract class AbstractAiPlayer extends Player {
         Platform.runLater(() -> {
             game.setGameCellState(t.getRow(), t.getColumn(),
                     game.isPlayer1Turn() ? GameCellState.Player1 : GameCellState.Player2);
+            board = game.getBoardStateInt();
             updatePoints(t);
             game.moveDone();
         });

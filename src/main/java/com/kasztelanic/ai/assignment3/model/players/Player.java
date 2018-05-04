@@ -21,7 +21,7 @@ public class Player {
     protected final ReadOnlyIntegerWrapper points;
     protected final String color;
     protected final PairManager pairManager;
-    int[][] board = null;
+    protected int[][] board = null;
 
     public Player(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
             PairManager pairManager) {
@@ -131,7 +131,6 @@ public class Player {
                 points += pts;
             }
         }
-        System.out.println(points);
         return points;
     }
 }

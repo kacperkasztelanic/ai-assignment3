@@ -13,7 +13,6 @@ public class AiPlayer extends AbstractAiPlayer {
 
     private List<IntPair> avaliableMoves;
     private int movesToDo;
-    private int[][] board = null;
 
     public AiPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
             PairManager pairManager, boolean alphaBetaPruning, int treeDepth) {
@@ -27,7 +26,6 @@ public class AiPlayer extends AbstractAiPlayer {
     }
 
     private Turn solve() {
-        this.board = game.getBoardStateInt();
         this.avaliableMoves = pairManager.getUnused();
         // IntPair result = solveRec(true, movesDone, depth);
         IntPair result = solveRecMax(game.getMovesDone(), treeDepth.get());
@@ -44,7 +42,6 @@ public class AiPlayer extends AbstractAiPlayer {
         IntPair currMove;
         int currentPts = 0;
         for (int i = 0; i < avaliableMoves.size(); i++) {
-            System.out.println("movesDone:" + movesDone + "|depth:" + depth);
             currentPts = 0;
             IntPair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
@@ -63,6 +60,9 @@ public class AiPlayer extends AbstractAiPlayer {
                     moveChoosen = currMove;
                 }
                 board[moveIndexes.fst][moveIndexes.snd] = GameCellState.EMPTY.toInt();
+            }
+            if (movesDone == game.getMovesDone()) {
+                System.out.println("move choosen:" + moveChoosen.fst + "\t" + avaliableMoves.get(moveChoosen.snd));
             }
         }
         return moveChoosen;
