@@ -2,12 +2,12 @@ package com.kasztelanic.ai.assignment3.dominik;
 
 import java.util.List;
 
-public class AIPlayer extends Player {
+public class MinMaxPlayer extends Player {
     private List<IntPair> avaliableMoves;
     private int depth;
     private int movesDone;
 
-    AIPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth) {
+    MinMaxPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth) {
         super(playerNumber, board, pairManager);
         this.depth = treeMaxDepth;
     }

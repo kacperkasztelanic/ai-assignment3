@@ -8,7 +8,6 @@ public class Game {
     final static int PLAYER2 = 2;
 
     private int[][] board;
-    private int size;
     private int depth = 1;
     private int tour = 0;
     private int movesToDo;
@@ -19,7 +18,6 @@ public class Game {
 
     public Game(int size, int depth) {
         board = new int[size][];
-        this.size = size;
         this.depth = depth;
         for (int i = 0; i < size; i++) {
             // default board value is 0, same as EMPTY
@@ -31,10 +29,10 @@ public class Game {
     }
 
     private void setPlayers() {
-        // player1 = new HumanPlayer(1, board, pairManager);
+         player1 = new HumanPlayer(1, board, pairManager);
         // player2 = new HumanPlayer(2, board, pairManager);
-        player1 = new AIPlayer(1, board, pairManager, 2);
-        player2 = new AIPlayer(2, board, pairManager, depth);
+//        player1 = new MinMaxPlayer(1, board, pairManager, 2);
+        player2 = new MinMaxPlayer(2, board, pairManager, depth);
     }
 
     public void run() {
@@ -62,7 +60,7 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        Game game = new Game(5, 6);
+        Game game = new Game(5, 5);
         game.run();
     }
 }
