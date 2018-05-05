@@ -9,12 +9,12 @@ import com.kasztelanic.ai.assignment3.model.Turn;
 import com.kasztelanic.ai.assignment3.model.enums.GameCellState;
 import com.kasztelanic.ai.assignment3.model.enums.PlayerType;
 
-public class AiPlayer extends AbstractAiPlayer {
+public class MinMaxPlayer extends AbstractAiPlayer {
 
     private List<IntPair> avaliableMoves;
     private int movesToDo;
 
-    public AiPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
+    public MinMaxPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
             PairManager pairManager, boolean alphaBetaPruning, int treeDepth) {
         super(game, name, playerType, gameCellState, color, pairManager, alphaBetaPruning, treeDepth);
         movesToDo = game.getBoardSize() * game.getBoardSize();

@@ -22,7 +22,6 @@ public abstract class AbstractAiPlayer extends Player {
         super(game, name, playerType, gameCellState, color, pairManager);
         this.alphaBetaPruning = new ReadOnlyBooleanWrapper(alphaBetaPruning);
         this.treeDepth = new ReadOnlyIntegerWrapper(treeDepth);
-        System.out.println("Depth" + treeDepth);
     }
 
     public ReadOnlyBooleanProperty getAlphaBetaPruningProperty() {

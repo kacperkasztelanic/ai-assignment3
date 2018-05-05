@@ -13,7 +13,7 @@ public class PlayerFactory {
             return new Player(game, name, playerType, gameCellState, color, pairManager);
         }
         if (playerType == PlayerType.Computer1) {
-            return new AiPlayer(game, name, playerType, gameCellState, color, pairManager, alphaBetaPruning, treeDepth);
+            return new MinMaxPlayer(game, name, playerType, gameCellState, color, pairManager, alphaBetaPruning, treeDepth);
         }
         if (playerType == PlayerType.Computer2) {
             return new RandomPlayer(game, name, playerType, gameCellState, color, pairManager, alphaBetaPruning,
