@@ -6,6 +6,7 @@ public class MinMaxPlayer extends Player {
     private List<IntPair> avaliableMoves;
     private int depth;
     private int movesDone;
+    private int moveIndex;
 
     MinMaxPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth) {
         super(playerNumber, board, pairManager);
@@ -21,74 +22,31 @@ public class MinMaxPlayer extends Player {
     private void solve(int movesDone) {
         this.movesDone = movesDone;
         this.avaliableMoves = pairManager.getUnused();
-        // IntPair result = solveRec(true, movesDone, depth);
-        IntPair result = solveRecMax(movesDone, depth);
-        IntPair moveIndexes = avaliableMoves.get(result.snd);
+        solveRecMax(movesDone, depth);
+        IntPair moveIndexes = avaliableMoves.get(moveIndex);
         board[moveIndexes.fst][moveIndexes.snd] = playerNumber;
         upadtePts(moveIndexes.fst, moveIndexes.snd);
         pairManager.removePair(moveIndexes);
     }
 
-    // private IntPair solveRec(boolean isMaximalization, int movesDone, int depth)
-    // {
-    // List<IntPair> results = new ArrayList<>(avaliableMoves.size());
-    // for (int i = 0; i < avaliableMoves.size(); i++) {
-    // int currentPts = 0;
-    // IntPair moveIndexes = avaliableMoves.get(i);
-    // if (isMoveAvaliable(moveIndexes)) {
-    // board[moveIndexes.fst][moveIndexes.snd] = MOVE;
-    // int pts = calculatePts(moveIndexes.fst, moveIndexes.snd);
-    // if (isMaximalization) {
-    // currentPts += pts;
-    // } else {
-    // currentPts -= pts;
-    // }
-    // if (movesDone + 1 < movesToDo && depth > 1) {
-    // IntPair lastChoosen = solveRec(!isMaximalization, movesDone + 1, depth - 1);
-    // results.add(new IntPair(currentPts + lastChoosen.fst, i));
-    // } else {
-    // results.add(new IntPair(currentPts, i));
-    // }
-    // board[moveIndexes.fst][moveIndexes.snd] = EMPTY;
-    // }
-    // }
-    //// if (movesDone == this.movesDone) {
-    //// debugPrint(results, avaliableMoves);
-    //// }
-    // IntPair moveChoosen;
-    // if (isMaximalization) {
-    // moveChoosen = results.stream().max((i,j) -> i.compareTo(j)).get();
-    // } else {
-    // moveChoosen = results.stream().min((i,j) -> i.compareTo(j)).get();
-    // }
-    // if (movesDone == this.movesDone) {
-    // System.out.println("move choosen:" + moveChoosen.fst + "\t"
-    // + avaliableMoves.get(moveChoosen.snd));
-    // }
-    // return moveChoosen;
-    // }
-
-    private IntPair solveRecMax(int movesDone, int depth) {
-        IntPair moveChoosen = null;
-        IntPair currMove;
+    private int solveRecMax(int movesDone, int depth) {
+        Integer choosenPts = null;
+        int accumulatedPts;
         int currentPts = 0;
         for (int i = 0; i < avaliableMoves.size(); i++) {
             currentPts = 0;
             IntPair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
                 board[moveIndexes.fst][moveIndexes.snd] = MOVE;
-                int pts = calculatePts(moveIndexes.fst, moveIndexes.snd);
-                currentPts += pts;
+                currentPts += calculatePts(moveIndexes.fst, moveIndexes.snd);
                 if (movesDone + 1 < movesToDo && depth > 1) {
-                    IntPair lastChoosen = solveRecMin(movesDone + 1, depth - 1);
-                    currMove = new IntPair(currentPts + lastChoosen.fst, i);
+                    accumulatedPts = currentPts + solveRecMin(movesDone + 1, depth - 1);
                 } else {
-                    currMove = new IntPair(currentPts, i);
+                    accumulatedPts = currentPts;
                 }
-                if (moveChoosen == null) {
-                    moveChoosen = currMove;
-                } else if (currMove.compareTo(moveChoosen) >= 0) {
-                    moveChoosen = currMove;
+                if (choosenPts == null || accumulatedPts >= choosenPts) {
+                    choosenPts = accumulatedPts;
+                    trySetMoveIndex(i, movesDone);
                 }
                 board[moveIndexes.fst][moveIndexes.snd] = EMPTY;
             }
@@ -96,39 +54,41 @@ public class MinMaxPlayer extends Player {
         // if (movesDone == this.movesDone) {
         // debugPrint(results, avaliableMoves);
         // }
-        // moveChoosen = results.stream().max((i, j) -> i.compareTo(j)).get();
         if (movesDone == this.movesDone) {
-            System.out.println("move choosen:" + moveChoosen.fst + "\t" + avaliableMoves.get(moveChoosen.snd));
+            System.out.println("move choosen:" + choosenPts + "\t" + avaliableMoves.get(moveIndex));
         }
-        return moveChoosen;
+        return choosenPts;
     }
+    
+    private void trySetMoveIndex(int moveIndex, int movesDone) {
+    	if (this.movesDone == movesDone) {
+    		this.moveIndex = moveIndex;
+        }
+	}
 
-    private IntPair solveRecMin(int movesDone, int depth) {
-        IntPair moveChoosen = null;
-        IntPair currMove;
+	private int solveRecMin(int movesDone, int depth) {
+        Integer choosenPts = null;
+        int accumulatedPts;
         int currentPts = 0;
         for (int i = 0; i < avaliableMoves.size(); i++) {
             currentPts = 0;
             IntPair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
                 board[moveIndexes.fst][moveIndexes.snd] = MOVE;
-                int pts = calculatePts(moveIndexes.fst, moveIndexes.snd);
-                currentPts -= pts;
+                currentPts -= calculatePts(moveIndexes.fst, moveIndexes.snd);
                 if (movesDone + 1 < movesToDo && depth > 1) {
-                    IntPair lastChoosen = solveRecMax(movesDone + 1, depth - 1);
-                    currMove = new IntPair(currentPts + lastChoosen.fst, i);
+                    accumulatedPts = currentPts + solveRecMax(movesDone + 1, depth - 1);
                 } else {
-                    currMove = new IntPair(currentPts, i);
+                    accumulatedPts = currentPts;
                 }
-                if (moveChoosen == null) {
-                    moveChoosen = currMove;
-                } else if (currMove.compareTo(moveChoosen) < 0) {
-                    moveChoosen = currMove;
+                if (choosenPts == null || accumulatedPts < choosenPts) {
+                    choosenPts = accumulatedPts;
+
                 }
                 board[moveIndexes.fst][moveIndexes.snd] = EMPTY;
             }
         }
-        return moveChoosen;
+        return choosenPts;
     }
 
     @SuppressWarnings("unused")

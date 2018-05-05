@@ -29,9 +29,9 @@ public class Game {
     }
 
     private void setPlayers() {
-         player1 = new HumanPlayer(1, board, pairManager);
+//         player1 = new HumanPlayer(1, board, pairManager);
         // player2 = new HumanPlayer(2, board, pairManager);
-//        player1 = new MinMaxPlayer(1, board, pairManager, 2);
+        player1 = new MinMaxPlayer(1, board, pairManager, 2);
         player2 = new MinMaxPlayer(2, board, pairManager, depth);
     }
 
@@ -60,7 +60,7 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        Game game = new Game(5, 5);
+        Game game = new Game(11, 4);
         game.run();
     }
 }
