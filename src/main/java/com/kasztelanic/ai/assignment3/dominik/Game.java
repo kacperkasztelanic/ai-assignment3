@@ -1,5 +1,8 @@
 package com.kasztelanic.ai.assignment3.dominik;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
 
 public class Game {
@@ -30,9 +33,10 @@ public class Game {
 
     private void setPlayers() {
 //         player1 = new HumanPlayer(1, board, pairManager);
-        // player2 = new HumanPlayer(2, board, pairManager);
+//         player2 = new HumanPlayer(2, board, pairManager);
         player1 = new MinMaxPlayer(1, board, pairManager, 2);
         player2 = new MinMaxPlayer(2, board, pairManager, depth);
+//        player2 = new AlphaBetaPlayer(2, board, pairManager, depth);
     }
 
     public void run() {
@@ -60,6 +64,13 @@ public class Game {
     }
 
     public static void main(String[] args) {
+        PrintStream out;
+		try {
+			out = new PrintStream(new FileOutputStream("output.txt"));
+	        System.setOut(out);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
         Game game = new Game(11, 4);
         game.run();
     }
