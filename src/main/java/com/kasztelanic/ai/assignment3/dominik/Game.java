@@ -11,7 +11,8 @@ public class Game {
     final static int PLAYER2 = 2;
 
     private int[][] board;
-    private int depth = 1;
+    private int depth1 = 1;
+    private int depth2 = 1;
     private int tour = 0;
     private int movesToDo;
     private int movesDone = 0;
@@ -19,13 +20,11 @@ public class Game {
     private Player player1;
     private Player player2;
 
-    public Game(int size, int depth) {
-        board = new int[size][];
-        this.depth = depth;
-        for (int i = 0; i < size; i++) {
-            // default board value is 0, same as EMPTY
-            board[i] = new int[size];
-        }
+    public Game(int size, int depth1, int depth2) {
+    	// default board value is 0, same as EMPTY
+        board = new int[size][size];
+        this.depth1 = depth1;
+        this.depth2 = depth2;
         pairManager = new PairManager(size);
         movesToDo = size * size;
         setPlayers();
@@ -34,9 +33,9 @@ public class Game {
     private void setPlayers() {
 //         player1 = new HumanPlayer(1, board, pairManager);
 //         player2 = new HumanPlayer(2, board, pairManager);
-        player1 = new MinMaxPlayer(1, board, pairManager, 2);
-        player2 = new MinMaxPlayer(2, board, pairManager, depth);
-//        player2 = new AlphaBetaPlayer(2, board, pairManager, depth);
+        player1 = new MinMaxPlayer(1, board, pairManager, depth1);
+//        player2 = new MinMaxPlayer(2, board, pairManager, depth);
+        player2 = new AlphaBetaPlayer(2, board, pairManager, depth2);
     }
 
     public void run() {
@@ -63,15 +62,30 @@ public class Game {
         System.out.println("P2: " + player2.points);
     }
 
+    public void printMoveTimes(Player p) {
+    	 System.out.println(((AbstractAIPlayer)p).moveTimes.toString());
+    }
+    
+    public void printRcersions(Player p) {
+   	 System.out.println(((AbstractAIPlayer)p).recursions.toString());
+   }
+    
     public static void main(String[] args) {
-        PrintStream out;
-		try {
-			out = new PrintStream(new FileOutputStream("output.txt"));
-	        System.setOut(out);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-        Game game = new Game(11, 4);
+//        PrintStream out;
+//		try {
+//			out = new PrintStream(new FileOutputStream("output.txt"));
+//	        System.setOut(out);
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+    	int size = 11;
+    	int depth1 = 3;
+    	int depth2 = 4;
+        Game game = new Game(size, depth1, depth2);
         game.run();
+        game.printMoveTimes(game.player1);
+        game.printRcersions(game.player1);
+        game.printMoveTimes(game.player2);
+        game.printRcersions(game.player2);
     }
 }

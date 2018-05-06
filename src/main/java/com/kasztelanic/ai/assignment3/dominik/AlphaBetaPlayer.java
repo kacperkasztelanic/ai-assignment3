@@ -1,65 +1,40 @@
 package com.kasztelanic.ai.assignment3.dominik;
 
-import java.util.List;
-
-public class AlphaBetaPlayer extends Player {
+public class AlphaBetaPlayer extends AbstractAIPlayer {
 	
-	final static int INT_MAX = Integer.MAX_VALUE;
-	final static int INT_MIN = Integer.MIN_VALUE;
-	
-    private List<IntPair> avaliableMoves;
-    private int depth;
-    private int movesDone;
-    private int moveIndex;
-    private int recCounter = 0;
-
     AlphaBetaPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth) {
-        super(playerNumber, board, pairManager);
-        this.depth = treeMaxDepth;
+        super(playerNumber, board, pairManager, treeMaxDepth);
+    }
+    
+    protected void solveRec(int movesDone) {
+    	solveRecMax(0, movesDone, depth, INT_MIN, INT_MAX);
     }
 
-    @Override
-    void move(int movesDone) {
-        solve(movesDone);
-
-    }
-
-    private void solve(int movesDone) {
-        this.movesDone = movesDone;
-        this.avaliableMoves = pairManager.getUnused();
-        recCounter = 0;
-        solveRecMax(movesDone, depth, INT_MAX, INT_MIN);
-        System.out.println("recursion size: " + recCounter);
-        IntPair moveIndexes = avaliableMoves.get(moveIndex);
-        board[moveIndexes.fst][moveIndexes.snd] = playerNumber;
-        upadtePts(moveIndexes.fst, moveIndexes.snd);
-        pairManager.removePair(moveIndexes);
-    }
-
-    private int solveRecMax(int movesDone, int depth, int alpha, int beta) {
+    private int solveRecMax(int value, int movesDone, int depth, int alpha, int beta) {
         ++recCounter;
-        Integer choosenPts = null;
+        int choosenPts = alpha;
         int accumulatedPts;
         int currentPts = 0;
         for (int i = 0; i < avaliableMoves.size(); i++) {
-            currentPts = 0;
             IntPair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
                 board[moveIndexes.fst][moveIndexes.snd] = MOVE;
-                currentPts += calculatePts(moveIndexes.fst, moveIndexes.snd);
+                currentPts = calculatePts(moveIndexes.fst, moveIndexes.snd);
                 if (movesDone + 1 < movesToDo && depth > 1) {
-                    accumulatedPts = currentPts + solveRecMin(movesDone + 1, depth - 1, INT_MAX, beta);
+                    accumulatedPts = solveRecMin(value + currentPts, movesDone + 1, depth - 1, choosenPts, beta);
                 } else {
-                    accumulatedPts = currentPts;
+                    accumulatedPts = value + currentPts;
                 }
-                if (choosenPts == null || accumulatedPts >= choosenPts) {
+                if (accumulatedPts > choosenPts) {
                     choosenPts = accumulatedPts;
-                    beta = accumulatedPts;
-                    trySetMoveIndex(i, movesDone);
+                    trySetMoveIndex(i, depth);
                 }
                 board[moveIndexes.fst][moveIndexes.snd] = EMPTY;
-            	if (choosenPts >= alpha) {
-            		break;
+            	if (choosenPts >= beta) {
+					if (depth == this.depth) {
+						System.out.println("move choosen:" + choosenPts + "\t" + avaliableMoves.get(moveIndex));
+					}
+            		return beta;
             	}
             }
         }
@@ -68,36 +43,28 @@ public class AlphaBetaPlayer extends Player {
         }
         return choosenPts;
     }
-    
-    private void trySetMoveIndex(int moveIndex, int movesDone) {
-    	if (this.movesDone == movesDone) {
-    		this.moveIndex = moveIndex;
-        }
-	}
 
-	private int solveRecMin(int movesDone, int depth, int alpha, int beta) {
+	private int solveRecMin(int value, int movesDone, int depth, int alpha, int beta) {
         ++recCounter;
-        Integer choosenPts = null;
+        int choosenPts = beta;
         int accumulatedPts;
         int currentPts = 0;
         for (int i = 0; i < avaliableMoves.size(); i++) {
-            currentPts = 0;
             IntPair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
                 board[moveIndexes.fst][moveIndexes.snd] = MOVE;
-                currentPts -= calculatePts(moveIndexes.fst, moveIndexes.snd);
+                currentPts = -calculatePts(moveIndexes.fst, moveIndexes.snd);
                 if (movesDone + 1 < movesToDo && depth > 1) {
-                    accumulatedPts = currentPts + solveRecMax(movesDone + 1, depth - 1, alpha, INT_MIN);
+                    accumulatedPts = solveRecMax(value + currentPts, movesDone + 1, depth - 1, alpha, choosenPts);
                 } else {
-                    accumulatedPts = currentPts;
+                    accumulatedPts = value + currentPts;
                 }
-                if (choosenPts == null || accumulatedPts < choosenPts) {
+                if (accumulatedPts < choosenPts) {
                     choosenPts = accumulatedPts;
-                    alpha = accumulatedPts;
                 }
                 board[moveIndexes.fst][moveIndexes.snd] = EMPTY;
-            	if (choosenPts <= beta) {
-            		break;
+            	if (choosenPts <= alpha) {
+            		return alpha;
             	}
             }
         }
