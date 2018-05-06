@@ -33,7 +33,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.kasztelanic.ai.assignment3.App</mainClass>
+							<mainClass>com.ai.game.App</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
