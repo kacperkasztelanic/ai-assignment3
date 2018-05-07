@@ -75,4 +75,8 @@ public abstract class Player {
 		}
 		return points;
 	}
+
+	public int getPoints() {
+		return points;
+	}
 }
