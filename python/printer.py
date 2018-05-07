@@ -1,6 +1,22 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+def printPoints(filename, times1, times2, is_log):
+    T1 = np.shape(times1)[0]
+    T2 = np.shape(times2)[0]
+    xT1 = np.arange(T1) + 3
+    xT2 = np.arange(T2) + 3
+    fig, ax = plt.subplots()
+    if is_log:
+        ax.semilogy(xT1, times1, label='player1')
+        ax.semilogy(xT2, times2, label='player2')
+    else:
+        ax.plot(xT1, times1, label='player1')
+        ax.plot(xT2, times2, label='player2')
+    ax.set(xlabel='board size', ylabel='points', title=filename)
+    ax.legend()
+    ax.grid()
+
 
 def printTimes(filename, times1, times2):
     T1 = np.shape(times1)[0]

@@ -7,7 +7,7 @@ public interface AppProperties {
     static final String ABOUT_ALERT_TITLE = "About";
 
     static final String ABOUT_ALERT_HEADER = "About";
-    static final String ABOUT_ALERT_TEXT = "Developed as artificial intelligence assignment by:\nKacper Kasztelanic\nA.D. 2018";
+    static final String ABOUT_ALERT_TEXT = "Developed as artificial intelligence assignment \nA.D. 2018";
 
     static final int DEFAULT_MAIN_WINDOW_WIDTH = 1366;
     static final int DEFAULT_MAIN_WINDOW_HEIGHT = 768;

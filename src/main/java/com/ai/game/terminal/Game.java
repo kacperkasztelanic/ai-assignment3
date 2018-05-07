@@ -33,9 +33,10 @@ public class Game {
     private void setPlayers() {
 //         player1 = new HumanPlayer(1, board, pairManager);
 //         player2 = new HumanPlayer(2, board, pairManager);
-        player1 = new MinMaxPlayer(1, board, pairManager, depth1);
 //        player2 = new MinMaxPlayer(2, board, pairManager, depth);
+//        player1 = new MinMaxPlayer(1, board, pairManager, depth1);
         player2 = new AlphaBetaPlayer(2, board, pairManager, depth2);
+        player1 = new AlphaBetaPlayer(1, board, pairManager, depth1);
     }
 
     public void run() {
@@ -97,7 +98,7 @@ public class Game {
 	}
 	
 	public static void playTenTimes() {
-    	int size = 12;
+    	int size = 13;
     	int depth1 = 4;
     	int depth2 = 5;
     	String type1 = "minmax";
@@ -156,9 +157,34 @@ public class Game {
     	}
 	}
 	
+	public static void pointsSizes() {    
+		List<Integer> points1 = new ArrayList<>();
+		List<Integer> points2 = new ArrayList<>();
+    	int size = 3;
+    	int depth1 = 1;
+    	int depth2 = 5;
+    	String filename = "points_sizes_" + depth1 + "_" + depth2;
+    	Game game = null;
+    	Writer writer = new Writer(filename);
+    	while (size < 12) {
+	        game = new Game(size, depth1, depth2);
+	        game.run();
+	        points1.add(game.player1.getPoints());
+	        points2.add(game.player2.getPoints());
+    		size++;
+    	}
+        writer.writeList(points1.toString());
+        writer.writeList(points2.toString());
+    	writer.close();
+    	if (game != null) {
+    		System.out.println(filename + "_pts_" + game.player1.getPoints() + "_" + game.player2.getPoints());
+    	}
+	}
+	
     public static void main(String[] args) throws FileNotFoundException {
 //    	playOnce();
 //    	playTenTimes();
-    	fstMoveTenTimes();
+//    	fstMoveTenTimes();
+    	pointsSizes();
     }
 }
