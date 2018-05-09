@@ -14,12 +14,52 @@ public abstract class AbstractAIPlayer extends Player {
     protected int recCounter = 0;
     public  List<Long> moveTimes = new ArrayList<>();
     public List<Integer> recursions = new ArrayList<>();
+    protected int prediction;
+    protected int[][] boardValues;
 
     AbstractAIPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth) {
         super(playerNumber, board, pairManager);
         this.depth = treeMaxDepth;
+        this.prediction = 0;
+        generateBoardValues();
+    }
+    
+    AbstractAIPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth, int prediction) {
+        this(playerNumber, board, pairManager, treeMaxDepth);
+        this.prediction = prediction;
+        generateBoardValues();
     }
 
+    private void generateBoardValues() {
+    	if (prediction == 1) {
+    		boardValuesMiddleMax();
+    	} else if (prediction == 2) {
+    		boardValuesMiddleMin();
+    	} else if (prediction == 0) {
+    		boardValues = new int[size][size];
+    	}
+    }
+    
+    private void boardValuesMiddleMin() {
+    	boardValues = new int[size][size];
+    	int half = size / 2;
+    	for (int i = 0; i < size; i++) {
+    		for (int j = 0; j < size; j++) {
+    			boardValues[i][j] = Math.abs(half - i) + Math.abs(half - j);
+    		}
+    	}
+    }
+
+    private void boardValuesMiddleMax() {
+    	boardValues = new int[size][size];
+    	int half = size / 2;
+    	for (int i = 0; i < size; i++) {
+    		for (int j = 0; j < size; j++) {
+    			boardValues[i][j] = size - Math.abs(half - i) - Math.abs(half - j);
+    		}
+    	}
+    }
+    
     @Override
     public void move(int movesDone) {
         long startTime = System.currentTimeMillis();
@@ -58,4 +98,6 @@ public abstract class AbstractAIPlayer extends Player {
             System.out.println("  " + e.fst + "\t" + moves.get(e.snd));
         }
     }
+    
+    
 }

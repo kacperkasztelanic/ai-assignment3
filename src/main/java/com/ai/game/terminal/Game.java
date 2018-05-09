@@ -35,8 +35,8 @@ public class Game {
 //         player2 = new HumanPlayer(2, board, pairManager);
 //        player2 = new MinMaxPlayer(2, board, pairManager, depth);
 //        player1 = new MinMaxPlayer(1, board, pairManager, depth1);
-        player2 = new AlphaBetaPlayer(2, board, pairManager, depth2);
-        player1 = new AlphaBetaPlayer(1, board, pairManager, depth1);
+        player2 = new AlphaBetaPlayer(2, board, pairManager, depth2, 1);
+        player1 = new AlphaBetaPlayer(1, board, pairManager, depth1, 2);
     }
 
     public void run() {
@@ -161,12 +161,12 @@ public class Game {
 		List<Integer> points1 = new ArrayList<>();
 		List<Integer> points2 = new ArrayList<>();
     	int size = 3;
-    	int depth1 = 1;
-    	int depth2 = 5;
-    	String filename = "points_sizes_" + depth1 + "_" + depth2;
+    	int depth1 = 2;
+    	int depth2 = 3;
+    	String filename = "2_1_points_sizes_" + depth1 + "_" + depth2;
     	Game game = null;
     	Writer writer = new Writer(filename);
-    	while (size < 12) {
+    	while (size < 10) {
 	        game = new Game(size, depth1, depth2);
 	        game.run();
 	        points1.add(game.player1.getPoints());
