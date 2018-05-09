@@ -42,10 +42,10 @@ def main():
     # # printFewTimesRec('10_times_size_11_minmax_4_alpha-beta_5')
     # printFewTimesRec('10_times_size_12_minmax_4_alpha-beta_5_pts_250_322')
 
-    printFstFewTimesRec('fst_move_10_times_minmax_3_alpha-beta_3')
-    printFstFewTimesRec('fst_move_10_times_minmax_3_alpha-beta_4')
-    printFstFewTimesRec('fst_move_10_times_minmax_4_alpha-beta_4')
-    printFstFewTimesRec('fst_move_10_times_minmax_4_alpha-beta_5')
+    # printFstFewTimesRec('fst_move_10_times_minmax_3_alpha-beta_3')
+    # printFstFewTimesRec('fst_move_10_times_minmax_3_alpha-beta_4')
+    # printFstFewTimesRec('fst_move_10_times_minmax_4_alpha-beta_4')
+    # printFstFewTimesRec('fst_move_10_times_minmax_4_alpha-beta_5')
 
     # printPointsSizes('points_sizes_1_2')
     # printPointsSizes('points_sizes_1_4')

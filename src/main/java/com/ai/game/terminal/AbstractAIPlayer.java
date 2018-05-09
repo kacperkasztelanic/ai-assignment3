@@ -11,20 +11,21 @@ public abstract class AbstractAIPlayer extends Player {
     protected List<IntPair> avaliableMoves;
     protected int depth;
     protected int moveIndex;
+    protected int prediction;
+    protected int[][] boardValues;
+    
     protected int recCounter = 0;
     public  List<Long> moveTimes = new ArrayList<>();
     public List<Integer> recursions = new ArrayList<>();
-    protected int prediction;
-    protected int[][] boardValues;
 
-    AbstractAIPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth) {
+    public AbstractAIPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth) {
         super(playerNumber, board, pairManager);
         this.depth = treeMaxDepth;
         this.prediction = 0;
         generateBoardValues();
     }
     
-    AbstractAIPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth, int prediction) {
+    public AbstractAIPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth, int prediction) {
         this(playerNumber, board, pairManager, treeMaxDepth);
         this.prediction = prediction;
         generateBoardValues();

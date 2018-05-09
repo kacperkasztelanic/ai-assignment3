@@ -13,13 +13,12 @@ public class MinMaxPlayer extends AbstractAIPlayer {
     private int solveRecMax(int value, int movesDone, int depth) {
         ++recCounter;
         int choosenPts = INT_MIN;
-        int accumulatedPts;
-        int currentPts = 0;
         for (int i = 0; i < avaliableMoves.size(); ++i) {
             IntPair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
                 board[moveIndexes.fst][moveIndexes.snd] = MOVE;
-                currentPts = calculatePts(moveIndexes.fst, moveIndexes.snd);
+                int currentPts = calculatePts(moveIndexes.fst, moveIndexes.snd);
+                int accumulatedPts;
                 if (movesDone + 1 < movesToDo && depth > 1) {
                     accumulatedPts = solveRecMin(value + currentPts, movesDone + 1, depth - 1);
                 } else {
@@ -41,13 +40,12 @@ public class MinMaxPlayer extends AbstractAIPlayer {
 	private int solveRecMin(int value, int movesDone, int depth) {
         ++recCounter;
         int choosenPts = INT_MAX;
-        int accumulatedPts;
-        int currentPts = 0;
         for (int i = 0; i < avaliableMoves.size(); ++i) {
             IntPair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
                 board[moveIndexes.fst][moveIndexes.snd] = MOVE;
-                currentPts = -calculatePts(moveIndexes.fst, moveIndexes.snd);
+                int currentPts = -calculatePts(moveIndexes.fst, moveIndexes.snd);
+                int accumulatedPts;
                 if (movesDone + 1 < movesToDo && depth > 1) {
                     accumulatedPts = solveRecMax(value + currentPts, movesDone + 1, depth - 1);
                 } else {
