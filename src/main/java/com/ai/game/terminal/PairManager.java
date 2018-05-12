@@ -6,7 +6,7 @@ import java.util.Random;
 public class PairManager {
 
     int boardSide;
-    IntPair[] arr;
+    MovePair[] arr;
     int capacity;
     int size;
     Random rand = new Random();
@@ -14,14 +14,14 @@ public class PairManager {
     public PairManager(int boardSide) {
         this.boardSide = boardSide;
         capacity = boardSide * boardSide;
-        arr = new IntPair[capacity];
+        arr = new MovePair[capacity];
         for (int i = 0; i < capacity; i++) {
-            arr[i] = new IntPair(i / boardSide, i % boardSide);
+            arr[i] = new MovePair(i / boardSide, i % boardSide);
         }
         size = capacity;
     }
 
-    public boolean removePair(IntPair other) {
+    public boolean removePair(MovePair other) {
         boolean result = false;
         for (int i = 0; !result && i < size; i++) {
             result = arr[i].equals(other);
@@ -39,8 +39,8 @@ public class PairManager {
     // return result;
     // }
 
-    public ArrayList<IntPair> getUnused() {
-        ArrayList<IntPair> list = new ArrayList<>(size);
+    public ArrayList<MovePair> getUnused() {
+        ArrayList<MovePair> list = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             list.add(arr[i]);
         }

@@ -27,7 +27,7 @@ public abstract class Player {
 		points += calculatePts(i, j);
 	}
 	
-	protected boolean isMoveAvaliable(IntPair pair) {
+	protected boolean isMoveAvaliable(MovePair pair) {
 		return board[pair.fst][pair.snd] == EMPTY;
 	}
 	

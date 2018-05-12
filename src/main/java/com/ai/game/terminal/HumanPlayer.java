@@ -20,6 +20,6 @@ public class HumanPlayer extends Player {
 		}
         board[i][j] = playerNumber;
         upadtePts(i, j);
-        pairManager.removePair(new IntPair(i, j));
+        pairManager.removePair(new MovePair(i, j));
 	}
 }

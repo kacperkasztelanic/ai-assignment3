@@ -6,6 +6,10 @@ public class MinMaxPlayer extends AbstractAIPlayer {
         super(playerNumber, board, pairManager, treeMaxDepth);
     }
     
+    MinMaxPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth, MoveOrderType movesOrderType) {
+        super(playerNumber, board, pairManager, treeMaxDepth, movesOrderType);
+    }
+    
     protected void solveRec(int movesDone) {
     	solveRecMax(0, movesDone, depth);
     }
@@ -14,10 +18,10 @@ public class MinMaxPlayer extends AbstractAIPlayer {
         ++recCounter;
         int choosenPts = INT_MIN;
         for (int i = 0; i < avaliableMoves.size(); ++i) {
-            IntPair moveIndexes = avaliableMoves.get(i);
+            MovePair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
                 board[moveIndexes.fst][moveIndexes.snd] = MOVE;
-                int currentPts = calculatePts(moveIndexes.fst, moveIndexes.snd);
+                int currentPts = calculatePtsWithPrediction(moveIndexes.fst, moveIndexes.snd);
                 int accumulatedPts;
                 if (movesDone + 1 < movesToDo && depth > 1) {
                     accumulatedPts = solveRecMin(value + currentPts, movesDone + 1, depth - 1);
@@ -31,9 +35,7 @@ public class MinMaxPlayer extends AbstractAIPlayer {
                 board[moveIndexes.fst][moveIndexes.snd] = EMPTY;
             }
         }
-        if (depth == this.depth) {
-            System.out.println("move choosen:" + choosenPts + "\t" + avaliableMoves.get(moveIndex));
-        }
+        printChoosenMove(depth, choosenPts);
         return choosenPts;
     }
     
@@ -41,10 +43,10 @@ public class MinMaxPlayer extends AbstractAIPlayer {
         ++recCounter;
         int choosenPts = INT_MAX;
         for (int i = 0; i < avaliableMoves.size(); ++i) {
-            IntPair moveIndexes = avaliableMoves.get(i);
+            MovePair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
                 board[moveIndexes.fst][moveIndexes.snd] = MOVE;
-                int currentPts = -calculatePts(moveIndexes.fst, moveIndexes.snd);
+                int currentPts = -calculatePtsWithPrediction(moveIndexes.fst, moveIndexes.snd);
                 int accumulatedPts;
                 if (movesDone + 1 < movesToDo && depth > 1) {
                     accumulatedPts = solveRecMax(value + currentPts, movesDone + 1, depth - 1);

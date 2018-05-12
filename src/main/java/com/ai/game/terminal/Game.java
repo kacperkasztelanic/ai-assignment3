@@ -33,10 +33,10 @@ public class Game {
     private void setPlayers() {
 //         player1 = new HumanPlayer(1, board, pairManager);
 //         player2 = new HumanPlayer(2, board, pairManager);
-//        player2 = new MinMaxPlayer(2, board, pairManager, depth);
+//        player2 = new MinMaxPlayer(2, board, pairManager, depth2);
 //        player1 = new MinMaxPlayer(1, board, pairManager, depth1);
-        player2 = new AlphaBetaPlayer(2, board, pairManager, depth2, 1);
-        player1 = new AlphaBetaPlayer(1, board, pairManager, depth1, 2);
+        player2 = new AlphaBetaPlayer(2, board, pairManager, depth2);
+        player1 = new AlphaBetaPlayer(1, board, pairManager, depth1);
     }
 
     public void run() {
@@ -182,9 +182,9 @@ public class Game {
 	}
 	
     public static void main(String[] args) throws FileNotFoundException {
-//    	playOnce();
+    	playOnce();
 //    	playTenTimes();
 //    	fstMoveTenTimes();
-    	pointsSizes();
+//    	pointsSizes();
     }
 }

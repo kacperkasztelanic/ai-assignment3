@@ -1,6 +1,6 @@
 package com.ai.game.model.players;
 
-import com.ai.game.terminal.IntPair;
+import com.ai.game.terminal.MovePair;
 import com.ai.game.terminal.PairManager;
 import com.ai.game.model.Game;
 import com.ai.game.model.Turn;
@@ -74,13 +74,13 @@ public class Player {
         return name;
     }
 
-    protected boolean isMoveAvaliable(IntPair pair) {
+    protected boolean isMoveAvaliable(MovePair pair) {
         return game.board[pair.fst][pair.snd] == GameCellState.EMPTY.toInt();
     }
 
     public void move(Turn turn) {
         game.board[turn.getRow()][turn.getColumn()] = gameCellState.get().toInt();
-        pairManager.removePair(IntPair.of(turn.getRow(), turn.getColumn()));
+        pairManager.removePair(MovePair.of(turn.getRow(), turn.getColumn()));
         updatePoints(turn);
     }
 

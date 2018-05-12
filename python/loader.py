@@ -1,12 +1,10 @@
 import csv
 import numpy as np
 
-PATH = 'D:\dominik\workspace\\ai_3\sizadanie3'
 FILES = '\\files\\'
 
 CSV = '.csv'
 
-PATH = PATH
 FOLDER = FILES
 
 times1 = []
@@ -19,7 +17,7 @@ def read(filename):
     times2 = []
     recursions1 = []
     recursions2 = []
-    with open(PATH + FOLDER + filename + CSV, 'rt') as csvfile:
+    with open("./" + FOLDER + filename + CSV, 'rt') as csvfile:
         counter = 0
         data_reader = csv.reader(csvfile, delimiter=',')
         for row in data_reader:
@@ -40,7 +38,7 @@ def readFew(filename):
     times2 = []
     recursions1 = []
     recursions2 = []
-    with open(PATH + FOLDER + filename + CSV, 'rt') as csvfile:
+    with open("./" + FOLDER + filename + CSV, 'rt') as csvfile:
         counter = 0
         data_reader = csv.reader(csvfile, delimiter=',')
         for row in data_reader:
