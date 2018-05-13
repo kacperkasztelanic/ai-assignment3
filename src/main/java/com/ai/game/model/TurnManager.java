@@ -25,6 +25,7 @@ public class TurnManager {
                 arr[i] = arr[--size];
             }
         }
+        System.out.println("Removing");
         return result;
     }
 

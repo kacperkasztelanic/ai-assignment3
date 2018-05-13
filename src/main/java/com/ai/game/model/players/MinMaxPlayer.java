@@ -14,6 +14,8 @@ public class MinMaxPlayer extends AbstractAiPlayer {
         super(game, name, playerType, gameCellState, color, turnManager, alphaBetaPruning, treeDepth, heuristic);
     }
 
+    int recCounter = 0;
+
     @Override
     protected Turn moveInternal() {
         this.avaliableMoves = turnManager.getUnused();
@@ -24,6 +26,7 @@ public class MinMaxPlayer extends AbstractAiPlayer {
     }
 
     private int solveRecMax(int value, int movesDone, int depth) {
+        ++recCounter;
         int choosenPts = Integer.MIN_VALUE;
         for (int i = 0; i < avaliableMoves.size(); ++i) {
             Turn turn = avaliableMoves.get(i);
@@ -45,10 +48,12 @@ public class MinMaxPlayer extends AbstractAiPlayer {
                 game.setGameBoardCellValue(turn.getRow(), turn.getColumn(), GameCellState.EMPTY.toInt());
             }
         }
+        printChoosenMove(depth, choosenPts);
         return choosenPts;
     }
 
     private int solveRecMin(int value, int movesDone, int depth) {
+        ++recCounter;
         int choosenPts = Integer.MAX_VALUE;
         for (int i = 0; i < avaliableMoves.size(); ++i) {
             Turn turn = avaliableMoves.get(i);
