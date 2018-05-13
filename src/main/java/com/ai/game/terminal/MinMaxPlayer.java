@@ -17,7 +17,7 @@ public class MinMaxPlayer extends AbstractAIPlayer {
             MovePair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
                 board[moveIndexes.fst][moveIndexes.snd] = MOVE;
-                int currentPts = calculatePtsWithPrediction(moveIndexes.fst, moveIndexes.snd);
+                int currentPts = calculatePtsWithPredictionForCurrentPlayer(moveIndexes.fst, moveIndexes.snd);
                 int accumulatedPts;
                 if (movesDone + 1 < movesToDo && depth > 1) {
                     accumulatedPts = solveRecMin(value + currentPts, movesDone + 1, depth - 1);
