@@ -36,7 +36,9 @@ public class Game {
 //        player2 = new MinMaxPlayer(2, board, pairManager, depth2);
 //        player1 = new MinMaxPlayer(1, board, pairManager, depth1);
         player1 = new AlphaBetaPlayer(1, board, pairManager, depth1);
+        ((AbstractAIPlayer) player1).buildOrderType(MoveOrderType.PreferMiddleOfBoard);
         player2 = new AlphaBetaPlayer(2, board, pairManager, depth2);
+       ((AbstractAIPlayer) player2).buildIfSameValuesType(MoveIfSameValues.Random);
     }
 
     public void run() {

@@ -8,10 +8,12 @@ public abstract class AbstractAIPlayer extends Player {
 	final static int INT_MAX = Integer.MAX_VALUE;
 	final static int INT_MIN = Integer.MIN_VALUE;
 	
-    protected List<MovePair> avaliableMoves;
     protected int depth;
     protected int moveIndex;
+    protected List<MovePair> avaliableMoves;
+    
     protected MoveOrderType movesOrderType;
+    protected MoveIfSameValues movesIfSameValues;
     protected int[][] boardValues;
     
     protected int recCounter = 0;
@@ -22,15 +24,20 @@ public abstract class AbstractAIPlayer extends Player {
         super(playerNumber, board, pairManager);
         this.depth = treeMaxDepth;
         this.movesOrderType = MoveOrderType.Default;
-        generateBoardValues();
+        this.movesIfSameValues = MoveIfSameValues.Default;
     }
     
-    public AbstractAIPlayer(int playerNumber, int[][] board, MovesManager pairManager, int treeMaxDepth, MoveOrderType movesOrderType) {
-        this(playerNumber, board, pairManager, treeMaxDepth);
-        this.movesOrderType = movesOrderType;
-        generateBoardValues();
+    public AbstractAIPlayer buildOrderType(MoveOrderType movesOrderType) {
+    	this.movesOrderType = movesOrderType;
+    	generateBoardValues();
+    	return this;
     }
-
+    
+    public AbstractAIPlayer buildIfSameValuesType(MoveIfSameValues movesIfSameValues) {
+    	this.movesIfSameValues = movesIfSameValues;
+    	return this;
+    }
+    
     private void generateBoardValues() {
     	if (movesOrderType == MoveOrderType.PreferMiddleOfBoard) {
     		boardValuesMiddleMax();
@@ -74,7 +81,11 @@ public abstract class AbstractAIPlayer extends Player {
     }
     
     protected void solve(int movesDone) {
-        this.avaliableMoves = pairManager.getUnused();
+    	if (movesIfSameValues == MoveIfSameValues.Default) {
+    		this.avaliableMoves = pairManager.getUnused();
+    	} else if (movesIfSameValues == MoveIfSameValues.Random) {
+    		this.avaliableMoves = pairManager.getRandomizedUnused();
+    	}
         recCounter = 0;
         solveRec(movesDone);
         System.out.println("recursion size: " + recCounter);

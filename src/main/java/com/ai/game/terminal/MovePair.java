@@ -14,6 +14,22 @@ public class MovePair implements Comparable<MovePair> {
         this.snd = snd;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        MovePair other = (MovePair) obj;
+        if (fst != other.fst)
+            return false;
+        if (snd != other.snd)
+            return false;
+        return true;
+    }
+    
 	@Override
 	public int compareTo(MovePair o) {
 		if (fst > o.fst) {

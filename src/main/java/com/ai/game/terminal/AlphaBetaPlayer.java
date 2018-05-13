@@ -6,10 +6,6 @@ public class AlphaBetaPlayer extends AbstractAIPlayer {
         super(playerNumber, board, pairManager, treeMaxDepth);
     }
     
-    AlphaBetaPlayer(int playerNumber, int[][] board, MovesManager pairManager, int treeMaxDepth, MoveOrderType movesOrderType) {
-        super(playerNumber, board, pairManager, treeMaxDepth, movesOrderType);
-    }
-    
     protected void solveRec(int movesDone) {
     	solveRecMax(0, movesDone, depth, INT_MIN, INT_MAX);
     }
