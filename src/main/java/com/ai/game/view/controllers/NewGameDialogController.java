@@ -67,9 +67,9 @@ public class NewGameDialogController {
         player2ComboBox.getSelectionModel().select(0);
 
         player1AiPane.disableProperty()
-                .bind(player1ComboBox.getSelectionModel().selectedItemProperty().isEqualTo(PlayerType.Human));
+                .bind(player1ComboBox.getSelectionModel().selectedItemProperty().isEqualTo(PlayerType.HUMAN));
         player2AiPane.disableProperty()
-                .bind(player2ComboBox.getSelectionModel().selectedItemProperty().isEqualTo(PlayerType.Human));
+                .bind(player2ComboBox.getSelectionModel().selectedItemProperty().isEqualTo(PlayerType.HUMAN));
     }
 
     public GameSettings getGameSettings() {

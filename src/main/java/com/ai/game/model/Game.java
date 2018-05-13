@@ -3,10 +3,9 @@ package com.ai.game.model;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.ai.game.terminal.PairManager;
 import com.ai.game.model.enums.GameCellState;
 import com.ai.game.model.enums.PlayerType;
-import com.ai.game.model.players.Player;
+import com.ai.game.model.players.AbstractPlayer;
 import com.ai.game.model.players.PlayerFactory;
 import com.ai.game.properties.AppProperties;
 
@@ -24,16 +23,15 @@ public class Game {
     private ReadOnlyBooleanWrapper isWaiting;
     private ReadOnlyIntegerWrapper boardSize;
     private ReadOnlyObjectWrapper<GameCellState>[][] gameCells;
+    public final int[][] board;
 
-    private Player player1;
-    private Player player2;
-    private Player winner;
-    private ReadOnlyObjectWrapper<Player> currentPlayer;
+    private AbstractPlayer player1;
+    private AbstractPlayer player2;
+    private AbstractPlayer winner;
+    private ReadOnlyObjectWrapper<AbstractPlayer> currentPlayer;
 
     private int movesDone;
     private int allFields;
-
-    public final int[][] board;
 
     private ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -45,12 +43,12 @@ public class Game {
     private Game(GameSettings gameSettings) {
         boardSize = new ReadOnlyIntegerWrapper(gameSettings.getBoardSize());
         board = new int[boardSize.get()][boardSize.get()];
-        PairManager pairManager = new PairManager(boardSize.get());
+        TurnManager turnManager = new TurnManager(boardSize.get());
         player1 = PlayerFactory.getPlayer(this, AppProperties.PLAYER1_NAME, gameSettings.getPlayer1Type(),
-                GameCellState.Player1, AppProperties.PLAYER1_COLOR, pairManager,
+                GameCellState.Player1, AppProperties.PLAYER1_COLOR, turnManager,
                 gameSettings.isPlayer1AlphaBetaPruning(), gameSettings.getPlayer1TreeDepth());
         player2 = PlayerFactory.getPlayer(this, AppProperties.PLAYER2_NAME, gameSettings.getPlayer2Type(),
-                GameCellState.Player2, AppProperties.PLAYER2_COLOR, pairManager,
+                GameCellState.Player2, AppProperties.PLAYER2_COLOR, turnManager,
                 gameSettings.isPlayer2AlphaBetaPruning(), gameSettings.getPlayer2TreeDepth());
         currentPlayer = new ReadOnlyObjectWrapper<>(player1);
         isWaiting = new ReadOnlyBooleanWrapper();
@@ -62,7 +60,7 @@ public class Game {
                 Turn turn = Turn.of(i, j);
                 gameCells[i][j] = new ReadOnlyObjectWrapper<>(GameCellState.EMPTY);
                 gameCells[i][j].addListener((o, ov, nv) -> {
-                    if (currentPlayer.get().getType() == PlayerType.Human) {
+                    if (currentPlayer.get().getType() == PlayerType.HUMAN) {
                         currentPlayer.get().move(turn);
                         moveDone();
                     }
@@ -72,7 +70,7 @@ public class Game {
     }
 
     public boolean nextMove() {
-        if (currentPlayer.get().getType() != PlayerType.Human && !isEnd()) {
+        if (currentPlayer.get().getType() != PlayerType.HUMAN && !isEnd()) {
             Task<Void> task = new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
@@ -143,11 +141,11 @@ public class Game {
         return isWaiting.get();
     }
 
-    public ReadOnlyObjectProperty<Player> getCurrentPlayerProperty() {
+    public ReadOnlyObjectProperty<AbstractPlayer> getCurrentPlayerProperty() {
         return currentPlayer.getReadOnlyProperty();
     }
 
-    public Player getCurrentPlayer() {
+    public AbstractPlayer getCurrentPlayer() {
         return currentPlayer.get();
     }
 
@@ -159,15 +157,15 @@ public class Game {
         currentPlayer.set(currentPlayer.get() == player1 ? player2 : player1);
     }
 
-    public Player getPlayer1() {
+    public AbstractPlayer getPlayer1() {
         return player1;
     }
 
-    public Player getPlayer2() {
+    public AbstractPlayer getPlayer2() {
         return player2;
     }
 
-    public Player getWinner() {
+    public AbstractPlayer getWinner() {
         return winner;
     }
 
@@ -183,6 +181,14 @@ public class Game {
         if (gameCells[row][col].get() == GameCellState.EMPTY) {
             gameCells[row][col].set(state);
         }
+    }
+
+    public boolean isGameBoardCellEmpty(int row, int col) {
+        return board[row][col] == GameCellState.EMPTY.toInt();
+    }
+
+    public void setGameBoardCellValue(int row, int col, int value) {
+        board[row][col] = value;
     }
 
     public int getMovesDone() {

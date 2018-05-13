@@ -1,6 +1,6 @@
 package com.ai.game.terminal;
 
-public class MovePair implements Comparable<MovePair> {
+public class MovePair {
 
     public final int fst;
     public final int snd;
@@ -14,17 +14,6 @@ public class MovePair implements Comparable<MovePair> {
         this.snd = snd;
     }
 
-	@Override
-	public int compareTo(MovePair o) {
-		if (fst > o.fst) {
-	           return 1;
-	       } else if (fst < o.fst){
-	           return -1;
-	       } else {
-	           return 0;
-	       }
-	}
-    
     @Override
     public String toString() {
         return String.format("(%d, %d)", fst, snd);

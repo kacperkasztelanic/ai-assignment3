@@ -1,9 +1,8 @@
 package com.ai.game.model.players;
 
-import com.ai.game.terminal.MovePair;
-import com.ai.game.terminal.PairManager;
 import com.ai.game.model.Game;
 import com.ai.game.model.Turn;
+import com.ai.game.model.TurnManager;
 import com.ai.game.model.enums.GameCellState;
 import com.ai.game.model.enums.PlayerType;
 
@@ -12,7 +11,7 @@ import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
-public class Player {
+public abstract class AbstractPlayer {
 
     protected final Game game;
     protected final String name;
@@ -20,16 +19,16 @@ public class Player {
     protected final ReadOnlyObjectWrapper<GameCellState> gameCellState;
     protected final ReadOnlyIntegerWrapper points;
     protected final String color;
-    protected final PairManager pairManager;
+    protected final TurnManager turnManager;
 
-    public Player(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
-            PairManager pairManager) {
+    public AbstractPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
+            TurnManager turnManager) {
         this.game = game;
         this.name = name;
         this.type = new ReadOnlyObjectWrapper<>(playerType);
         this.gameCellState = new ReadOnlyObjectWrapper<>(gameCellState);
         this.color = color;
-        this.pairManager = pairManager;
+        this.turnManager = turnManager;
         this.points = new ReadOnlyIntegerWrapper();
     }
 
@@ -74,14 +73,8 @@ public class Player {
         return name;
     }
 
-    protected boolean isMoveAvaliable(MovePair pair) {
-        return game.board[pair.fst][pair.snd] == GameCellState.EMPTY.toInt();
-    }
-
-    public void move(Turn turn) {
-        game.board[turn.getRow()][turn.getColumn()] = gameCellState.get().toInt();
-        pairManager.removePair(MovePair.of(turn.getRow(), turn.getColumn()));
-        updatePoints(turn);
+    protected boolean isMoveAvaliable(Turn turn) {
+        return game.isGameBoardCellEmpty(turn.getRow(), turn.getColumn());
     }
 
     protected void updatePoints(Turn turn) {
@@ -91,26 +84,25 @@ public class Player {
     protected int calculatePts(int y, int x) {
         int points = 0;
         boolean isRow = true;
-        int size = game.getBoardSize();
-        for (int i = 0; isRow && i < size; i++) {
-            isRow = game.board[y][i] != GameCellState.EMPTY.toInt();
+        for (int i = 0; isRow && i < game.getBoardSize(); i++) {
+            isRow = game.board[y][i] != 0;
         }
         if (isRow) {
-            points += size;
+            points += game.getBoardSize();
         }
         boolean isColumn = true;
-        for (int j = 0; isColumn && j < size; j++) {
-            isColumn = game.board[j][x] != GameCellState.EMPTY.toInt();
+        for (int j = 0; isColumn && j < game.getBoardSize(); j++) {
+            isColumn = game.board[j][x] != 0;
         }
         if (isColumn) {
-            points += size;
+            points += game.getBoardSize();
         }
         boolean isDiagonal1 = true;
         int temp = Math.min(y, x);
         int y2 = y - temp;
         int x2 = x - temp;
-        while (isDiagonal1 && x2 < size && y2 < size) {
-            isDiagonal1 = game.board[y2++][x2++] != GameCellState.EMPTY.toInt();
+        while (isDiagonal1 && x2 < game.getBoardSize() && y2 < game.getBoardSize()) {
+            isDiagonal1 = game.board[y2++][x2++] != 0;
         }
         if (isDiagonal1) {
             int pts = Math.min(y2, x2);
@@ -119,18 +111,66 @@ public class Player {
             }
         }
         boolean isDiagonal2 = true;
-        int temp2 = Math.min(y, size - x - 1);
+        int temp2 = Math.min(y, game.getBoardSize() - x - 1);
         int y3 = y - temp2;
         int x3 = x + temp2;
-        while (isDiagonal2 && x3 > -1 && y3 < size) {
-            isDiagonal2 = game.board[y3++][x3--] != GameCellState.EMPTY.toInt();
+        while (isDiagonal2 && x3 > -1 && y3 < game.getBoardSize()) {
+            isDiagonal2 = game.board[y3++][x3--] != 0;
         }
         if (isDiagonal2) {
-            int pts = Math.min(y3, size - x3 - 1);
+            int pts = Math.min(y3, game.getBoardSize() - x3 - 1);
             if (pts > 1) {
                 points += pts;
             }
         }
         return points;
     }
+
+    // protected int calculatePts(int y, int x) {
+    // int points = 0;
+    // boolean isRow = true;
+    // int size = game.getBoardSize();
+    // for (int i = 0; isRow && i < size; i++) {
+    // isRow = !game.isGameBoardCellEmpty(y, i);
+    // }
+    // if (isRow) {
+    // points += size;
+    // }
+    // boolean isColumn = true;
+    // for (int j = 0; isColumn && j < size; j++) {
+    // isColumn = !game.isGameBoardCellEmpty(j, x);
+    // }
+    // if (isColumn) {
+    // points += size;
+    // }
+    // boolean isDiagonal1 = true;
+    // int temp = Math.min(y, x);
+    // int y2 = y - temp;
+    // int x2 = x - temp;
+    // while (isDiagonal1 && x2 < size && y2 < size) {
+    // isDiagonal1 = !game.isGameBoardCellEmpty(y2++, x2++);
+    // }
+    // if (isDiagonal1) {
+    // int pts = Math.min(y2, x2);
+    // if (pts > 1) {
+    // points += pts;
+    // }
+    // }
+    // boolean isDiagonal2 = true;
+    // int temp2 = Math.min(y, size - x - 1);
+    // int y3 = y - temp2;
+    // int x3 = x + temp2;
+    // while (isDiagonal2 && x3 > -1 && y3 < size) {
+    // isDiagonal1 = !game.isGameBoardCellEmpty(y3++, x3--);
+    // }
+    // if (isDiagonal2) {
+    // int pts = Math.min(y3, size - x3 - 1);
+    // if (pts > 1) {
+    // points += pts;
+    // }
+    // }
+    // return points;
+    // }
+
+    public abstract void move(Turn turn);
 }

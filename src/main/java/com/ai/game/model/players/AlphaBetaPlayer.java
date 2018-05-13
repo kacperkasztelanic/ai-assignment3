@@ -7,9 +7,9 @@ import com.ai.game.model.enums.GameCellState;
 import com.ai.game.model.enums.Heuristic;
 import com.ai.game.model.enums.PlayerType;
 
-public class MinMaxPlayer extends AbstractAiPlayer {
+public class AlphaBetaPlayer extends AbstractAiPlayer {
 
-    public MinMaxPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
+    public AlphaBetaPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
             TurnManager turnManager, boolean alphaBetaPruning, int treeDepth, Heuristic heuristic) {
         super(game, name, playerType, gameCellState, color, turnManager, alphaBetaPruning, treeDepth, heuristic);
     }
@@ -18,21 +18,22 @@ public class MinMaxPlayer extends AbstractAiPlayer {
     protected Turn moveInternal() {
         this.avaliableMoves = turnManager.getUnused();
 
-        solveRecMax(0, game.getMovesDone(), treeDepth.get());
+        solveRecMax(0, game.getMovesDone(), treeDepth.get(), Integer.MIN_VALUE, Integer.MAX_VALUE);
 
         return avaliableMoves.get(moveIndex);
     }
 
-    private int solveRecMax(int value, int movesDone, int depth) {
-        int choosenPts = Integer.MIN_VALUE;
-        for (int i = 0; i < avaliableMoves.size(); ++i) {
+    private int solveRecMax(int value, int movesDone, int depth, int alpha, int beta) {
+        int choosenPts = alpha;
+        int accumulatedPts;
+        int currentPts = 0;
+        for (int i = 0; i < avaliableMoves.size(); i++) {
             Turn turn = avaliableMoves.get(i);
             if (isMoveAvaliable(turn)) {
                 game.setGameBoardCellValue(turn.getRow(), turn.getColumn(), gameCellState.get().toInt());
-                int currentPts = calculatePtsWithPrediction(turn.getRow(), turn.getColumn());
-                int accumulatedPts;
+                currentPts = calculatePtsWithPrediction(turn.getRow(), turn.getColumn());
                 if (movesDone + 1 < movesToDo && depth > 1) {
-                    accumulatedPts = solveRecMin(value + currentPts, movesDone + 1, depth - 1);
+                    accumulatedPts = solveRecMin(value + currentPts, movesDone + 1, depth - 1, choosenPts, beta);
                 } else {
                     accumulatedPts = value + currentPts;
                 }
@@ -43,21 +44,25 @@ public class MinMaxPlayer extends AbstractAiPlayer {
                     }
                 }
                 game.setGameBoardCellValue(turn.getRow(), turn.getColumn(), GameCellState.EMPTY.toInt());
+                if (choosenPts >= beta) {
+                    return beta;
+                }
             }
         }
         return choosenPts;
     }
 
-    private int solveRecMin(int value, int movesDone, int depth) {
-        int choosenPts = Integer.MAX_VALUE;
-        for (int i = 0; i < avaliableMoves.size(); ++i) {
+    private int solveRecMin(int value, int movesDone, int depth, int alpha, int beta) {
+        int choosenPts = beta;
+        int accumulatedPts;
+        int currentPts = 0;
+        for (int i = 0; i < avaliableMoves.size(); i++) {
             Turn turn = avaliableMoves.get(i);
             if (isMoveAvaliable(turn)) {
                 game.setGameBoardCellValue(turn.getRow(), turn.getColumn(), gameCellState.get().toInt());
-                int currentPts = -calculatePtsWithPrediction(turn.getRow(), turn.getColumn());
-                int accumulatedPts;
+                currentPts = -calculatePtsWithPrediction(turn.getRow(), turn.getColumn());
                 if (movesDone + 1 < movesToDo && depth > 1) {
-                    accumulatedPts = solveRecMax(value + currentPts, movesDone + 1, depth - 1);
+                    accumulatedPts = solveRecMax(value + currentPts, movesDone + 1, depth - 1, alpha, choosenPts);
                 } else {
                     accumulatedPts = value + currentPts;
                 }
@@ -65,6 +70,9 @@ public class MinMaxPlayer extends AbstractAiPlayer {
                     choosenPts = accumulatedPts;
                 }
                 game.setGameBoardCellValue(turn.getRow(), turn.getColumn(), GameCellState.EMPTY.toInt());
+                if (choosenPts <= alpha) {
+                    return alpha;
+                }
             }
         }
         return choosenPts;

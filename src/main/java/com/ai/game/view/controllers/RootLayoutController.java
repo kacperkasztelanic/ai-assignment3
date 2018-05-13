@@ -119,17 +119,17 @@ public class RootLayoutController {
 
     private void init() {
         boardSizeLb.textProperty().bind(game.getBoardSizeProperty().asString());
-        player1AiHBox.visibleProperty().bind(game.getPlayer1().getTypeProperty().isEqualTo(PlayerType.Human).not());
+        player1AiHBox.visibleProperty().bind(game.getPlayer1().getTypeProperty().isEqualTo(PlayerType.HUMAN).not());
         player1AiHBox.managedProperty().bind(player1AiHBox.visibleProperty());
-        player2AiHBox.visibleProperty().bind(game.getPlayer2().getTypeProperty().isEqualTo(PlayerType.Human).not());
+        player2AiHBox.visibleProperty().bind(game.getPlayer2().getTypeProperty().isEqualTo(PlayerType.HUMAN).not());
         player2AiHBox.managedProperty().bind(player2AiHBox.visibleProperty());
-        if (game.getPlayer1().getType() != PlayerType.Human) {
+        if (game.getPlayer1().getType() != PlayerType.HUMAN) {
             player1TreeDepthLb.textProperty().bind(((AbstractAiPlayer) game.getPlayer1()).getTreeDepthProperty().asString());
             player1AlphaBetaIndicator.visibleProperty()
                     .bind(((AbstractAiPlayer) game.getPlayer1()).getAlphaBetaPruningProperty());
             player1AlphaBetaIndicator.managedProperty().bind(player1AlphaBetaIndicator.visibleProperty());
         }
-        if (game.getPlayer2().getType() != PlayerType.Human) {
+        if (game.getPlayer2().getType() != PlayerType.HUMAN) {
             player2TreeDepthLb.textProperty().bind(((AbstractAiPlayer) game.getPlayer2()).getTreeDepthProperty().asString());
             player2AlphaBetaIndicator.visibleProperty()
                     .bind(((AbstractAiPlayer) game.getPlayer2()).getAlphaBetaPruningProperty());
@@ -140,8 +140,8 @@ public class RootLayoutController {
         player2Lb.textProperty().bind(game.getPlayer2().getTypeProperty().asString());
         player2PointsLb.textProperty().bind(game.getPlayer2().getPointsProperty().asString());
         mainView.disableProperty().bind(game.getIsEndProperty());
-        BooleanProperty humanPlayer = new SimpleBooleanProperty(game.getCurrentPlayer().getType() == PlayerType.Human);
-        game.getCurrentPlayerProperty().addListener((o, ov, nv) -> humanPlayer.set(nv.getType() == PlayerType.Human));
+        BooleanProperty humanPlayer = new SimpleBooleanProperty(game.getCurrentPlayer().getType() == PlayerType.HUMAN);
+        game.getCurrentPlayerProperty().addListener((o, ov, nv) -> humanPlayer.set(nv.getType() == PlayerType.HUMAN));
         nextMoveBt.visibleProperty()
                 .bind(((game.getIsEndProperty().not()).and(game.getIsWaitingProperty().not())).and(humanPlayer.not()));
         turnRectangle.setFill(Color.web(game.getPlayer1().getColor()));

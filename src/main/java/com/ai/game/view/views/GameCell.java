@@ -53,6 +53,6 @@ public class GameCell extends Pane {
     }
 
     private boolean isCurrentPlayerHuman() {
-        return game.getCurrentPlayer().getType() == PlayerType.Human;
+        return game.getCurrentPlayer().getType() == PlayerType.HUMAN;
     }
 }
