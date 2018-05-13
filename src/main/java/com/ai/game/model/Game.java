@@ -1,6 +1,5 @@
 package com.ai.game.model;
 
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -67,12 +66,6 @@ public class Game {
                     }
                 });
             }
-        }
-    }
-
-    public void printBoard() {
-        for (int[] row : board) {
-            System.out.println(Arrays.toString(row));
         }
     }
 

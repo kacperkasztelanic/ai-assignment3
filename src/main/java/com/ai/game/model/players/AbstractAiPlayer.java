@@ -87,21 +87,14 @@ public abstract class AbstractAiPlayer extends AbstractPlayer {
     @Override
     public void move(Turn turn) {
         Turn t = moveInternal();
-        turnManager.removePair(turn);
+        turnManager.removePair(t);
 
         Platform.runLater(() -> {
             game.setGameCellState(t.getRow(), t.getColumn(), gameCellState.get());
             game.setGameBoardCellValue(t.getRow(), t.getColumn(), gameCellState.get().toInt());
-            game.printBoard();
             updatePoints(t);
             game.moveDone();
         });
-    }
-
-    protected void printChoosenMove(int depth, int choosenPts) {
-        if (depth == this.getTreeDepth()) {
-            System.out.println("move choosen:" + choosenPts + "\t" + avaliableMoves.get(moveIndex));
-        }
     }
 
     protected abstract Turn moveInternal();
