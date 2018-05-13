@@ -6,7 +6,7 @@ public class HumanPlayer extends Player {
 	
 	private Scanner sc = new Scanner(System.in);
 	
-	HumanPlayer(int playerNumber, int[][] board, PairManager pairManager) {
+	HumanPlayer(int playerNumber, int[][] board, MovesManager pairManager) {
 		super(playerNumber, board, pairManager);
 	}
 

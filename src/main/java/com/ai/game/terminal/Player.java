@@ -10,10 +10,10 @@ public abstract class Player {
 	protected final int playerNumber;
 	protected int points = 0;
 	protected int movesToDo;
-	protected PairManager pairManager;
+	protected MovesManager pairManager;
 	protected long simulationTime = 0;
 
-	Player(int playerNumber, int[][] board, PairManager pairManager) {
+	Player(int playerNumber, int[][] board, MovesManager pairManager) {
 		this.board = board;
 		this.size = board.length;
 		this.playerNumber = playerNumber;

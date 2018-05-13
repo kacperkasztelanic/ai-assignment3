@@ -15,6 +15,24 @@ public class MovePair {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        MovePair other = (MovePair) obj;
+        if (fst != other.fst)
+            return false;
+        if (snd != other.snd)
+            return false;
+        return true;
+    }
+    
+	@Override
+	
+	
     public String toString() {
         return String.format("(%d, %d)", fst, snd);
     }
