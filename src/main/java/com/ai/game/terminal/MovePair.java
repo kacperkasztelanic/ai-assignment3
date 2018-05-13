@@ -1,7 +1,6 @@
 package com.ai.game.terminal;
 
 public class MovePair {
-public class MovePair implements Comparable<MovePair> {
 
     public final int fst;
     public final int snd;
@@ -30,8 +29,8 @@ public class MovePair implements Comparable<MovePair> {
             return false;
         return true;
     }
-    
-	@Override
+
+    @Override
     public String toString() {
         return String.format("(%d, %d)", fst, snd);
     }
