@@ -84,25 +84,26 @@ public abstract class AbstractPlayer {
     protected int calculatePts(int y, int x) {
         int points = 0;
         boolean isRow = true;
-        for (int i = 0; isRow && i < game.getBoardSize(); i++) {
-            isRow = game.board[y][i] != 0;
+        int size = game.getBoardSize();
+        for (int i = 0; isRow && i < size; i++) {
+            isRow = !game.isGameBoardCellEmpty(y, i);
         }
         if (isRow) {
-            points += game.getBoardSize();
+            points += size;
         }
         boolean isColumn = true;
-        for (int j = 0; isColumn && j < game.getBoardSize(); j++) {
-            isColumn = game.board[j][x] != 0;
+        for (int j = 0; isColumn && j < size; j++) {
+            isColumn = !game.isGameBoardCellEmpty(j, x);
         }
         if (isColumn) {
-            points += game.getBoardSize();
+            points += size;
         }
         boolean isDiagonal1 = true;
         int temp = Math.min(y, x);
         int y2 = y - temp;
         int x2 = x - temp;
-        while (isDiagonal1 && x2 < game.getBoardSize() && y2 < game.getBoardSize()) {
-            isDiagonal1 = game.board[y2++][x2++] != 0;
+        while (isDiagonal1 && x2 < size && y2 < size) {
+            isDiagonal1 = !game.isGameBoardCellEmpty(y2++, x2++);
         }
         if (isDiagonal1) {
             int pts = Math.min(y2, x2);
@@ -111,66 +112,20 @@ public abstract class AbstractPlayer {
             }
         }
         boolean isDiagonal2 = true;
-        int temp2 = Math.min(y, game.getBoardSize() - x - 1);
+        int temp2 = Math.min(y, size - x - 1);
         int y3 = y - temp2;
         int x3 = x + temp2;
-        while (isDiagonal2 && x3 > -1 && y3 < game.getBoardSize()) {
-            isDiagonal2 = game.board[y3++][x3--] != 0;
+        while (isDiagonal2 && x3 > -1 && y3 < size) {
+            isDiagonal2 = !game.isGameBoardCellEmpty(y3++, x3--);
         }
         if (isDiagonal2) {
-            int pts = Math.min(y3, game.getBoardSize() - x3 - 1);
+            int pts = Math.min(y3, size - x3 - 1);
             if (pts > 1) {
                 points += pts;
             }
         }
         return points;
     }
-
-    // protected int calculatePts(int y, int x) {
-    // int points = 0;
-    // boolean isRow = true;
-    // int size = game.getBoardSize();
-    // for (int i = 0; isRow && i < size; i++) {
-    // isRow = !game.isGameBoardCellEmpty(y, i);
-    // }
-    // if (isRow) {
-    // points += size;
-    // }
-    // boolean isColumn = true;
-    // for (int j = 0; isColumn && j < size; j++) {
-    // isColumn = !game.isGameBoardCellEmpty(j, x);
-    // }
-    // if (isColumn) {
-    // points += size;
-    // }
-    // boolean isDiagonal1 = true;
-    // int temp = Math.min(y, x);
-    // int y2 = y - temp;
-    // int x2 = x - temp;
-    // while (isDiagonal1 && x2 < size && y2 < size) {
-    // isDiagonal1 = !game.isGameBoardCellEmpty(y2++, x2++);
-    // }
-    // if (isDiagonal1) {
-    // int pts = Math.min(y2, x2);
-    // if (pts > 1) {
-    // points += pts;
-    // }
-    // }
-    // boolean isDiagonal2 = true;
-    // int temp2 = Math.min(y, size - x - 1);
-    // int y3 = y - temp2;
-    // int x3 = x + temp2;
-    // while (isDiagonal2 && x3 > -1 && y3 < size) {
-    // isDiagonal1 = !game.isGameBoardCellEmpty(y3++, x3--);
-    // }
-    // if (isDiagonal2) {
-    // int pts = Math.min(y3, size - x3 - 1);
-    // if (pts > 1) {
-    // points += pts;
-    // }
-    // }
-    // return points;
-    // }
 
     public abstract void move(Turn turn);
 }

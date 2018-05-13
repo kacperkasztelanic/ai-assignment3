@@ -23,7 +23,7 @@ public class Game {
     private ReadOnlyBooleanWrapper isWaiting;
     private ReadOnlyIntegerWrapper boardSize;
     private ReadOnlyObjectWrapper<GameCellState>[][] gameCells;
-    public final int[][] board;
+    private final int[][] board;
 
     private AbstractPlayer player1;
     private AbstractPlayer player2;
