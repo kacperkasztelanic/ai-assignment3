@@ -41,8 +41,6 @@ public class MovePair implements Comparable<MovePair> {
 	       }
 	}
 	
-	
-	
     @Override
     public String toString() {
         return String.format("(%d, %d)", fst, snd);

@@ -19,7 +19,7 @@ public class AlphaBetaPlayer extends AbstractAIPlayer {
             MovePair moveIndexes = avaliableMoves.get(i);
             if (isMoveAvaliable(moveIndexes)) {
                 board[moveIndexes.fst][moveIndexes.snd] = MOVE;
-                currentPts = calculatePtsWithPrediction(moveIndexes.fst, moveIndexes.snd);
+                currentPts = calculatePtsWithPredictionForCurrentPlayer(moveIndexes.fst, moveIndexes.snd);
                 if (movesDone + 1 < movesToDo && depth > 1) {
                     accumulatedPts = solveRecMin(value + currentPts, movesDone + 1, depth - 1, choosenPts, beta);
                 } else {
