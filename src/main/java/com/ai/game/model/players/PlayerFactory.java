@@ -1,6 +1,6 @@
 package com.ai.game.model.players;
 
-import com.ai.game.terminal.PairManager;
+import com.ai.game.terminal.MovesManager;
 import com.ai.game.model.Game;
 import com.ai.game.model.enums.GameCellState;
 import com.ai.game.model.enums.PlayerType;
@@ -8,7 +8,7 @@ import com.ai.game.model.enums.PlayerType;
 public class PlayerFactory {
 
     public static Player getPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState,
-            String color, PairManager pairManager, boolean alphaBetaPruning, int treeDepth) {
+            String color, MovesManager pairManager, boolean alphaBetaPruning, int treeDepth) {
         if (playerType == PlayerType.Human) {
             return new Player(game, name, playerType, gameCellState, color, pairManager);
         }

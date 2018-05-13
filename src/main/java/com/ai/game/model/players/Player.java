@@ -1,7 +1,7 @@
 package com.ai.game.model.players;
 
 import com.ai.game.terminal.MovePair;
-import com.ai.game.terminal.PairManager;
+import com.ai.game.terminal.MovesManager;
 import com.ai.game.model.Game;
 import com.ai.game.model.Turn;
 import com.ai.game.model.enums.GameCellState;
@@ -20,10 +20,10 @@ public class Player {
     protected final ReadOnlyObjectWrapper<GameCellState> gameCellState;
     protected final ReadOnlyIntegerWrapper points;
     protected final String color;
-    protected final PairManager pairManager;
+    protected final MovesManager pairManager;
 
     public Player(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
-            PairManager pairManager) {
+            MovesManager pairManager) {
         this.game = game;
         this.name = name;
         this.type = new ReadOnlyObjectWrapper<>(playerType);

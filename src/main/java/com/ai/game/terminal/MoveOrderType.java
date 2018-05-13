@@ -2,7 +2,7 @@ package com.ai.game.terminal;
 
 public enum MoveOrderType {
 
-    Default(0), PreferMiddleOfBoard(1), PreferBordersOfBoard(2);
+    Default(0), PreferMiddleOfBoard(1), PreferBordersOfBoard(2), RandomIfSameValue(3);
 
     private final int code;
 
@@ -20,6 +20,8 @@ public enum MoveOrderType {
             return MoveOrderType.PreferMiddleOfBoard;
         case 2:
             return MoveOrderType.PreferBordersOfBoard;
+        case 3:
+        	return MoveOrderType.RandomIfSameValue;
         case 0:
         default:
             return MoveOrderType.Default;

@@ -16,7 +16,7 @@ public class Game {
     private int tour = 0;
     private int movesToDo;
     private int movesDone = 0;
-    private PairManager pairManager;
+    private MovesManager pairManager;
     public Player player1;
     public Player player2;
 
@@ -25,7 +25,7 @@ public class Game {
         board = new int[size][size];
         this.depth1 = depth1;
         this.depth2 = depth2;
-        pairManager = new PairManager(size);
+        pairManager = new MovesManager(size);
         movesToDo = size * size;
         setPlayers();
     }
@@ -35,8 +35,8 @@ public class Game {
 //         player2 = new HumanPlayer(2, board, pairManager);
 //        player2 = new MinMaxPlayer(2, board, pairManager, depth2);
 //        player1 = new MinMaxPlayer(1, board, pairManager, depth1);
-        player2 = new AlphaBetaPlayer(2, board, pairManager, depth2);
         player1 = new AlphaBetaPlayer(1, board, pairManager, depth1);
+        player2 = new AlphaBetaPlayer(2, board, pairManager, depth2);
     }
 
     public void run() {

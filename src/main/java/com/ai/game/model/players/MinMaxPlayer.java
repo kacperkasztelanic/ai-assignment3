@@ -3,7 +3,7 @@ package com.ai.game.model.players;
 import java.util.List;
 
 import com.ai.game.terminal.MovePair;
-import com.ai.game.terminal.PairManager;
+import com.ai.game.terminal.MovesManager;
 import com.ai.game.model.Game;
 import com.ai.game.model.Turn;
 import com.ai.game.model.enums.GameCellState;
@@ -15,7 +15,7 @@ public class MinMaxPlayer extends AbstractAiPlayer {
     private int movesToDo;
 
     public MinMaxPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
-            PairManager pairManager, boolean alphaBetaPruning, int treeDepth) {
+            MovesManager pairManager, boolean alphaBetaPruning, int treeDepth) {
         super(game, name, playerType, gameCellState, color, pairManager, alphaBetaPruning, treeDepth);
         movesToDo = game.getBoardSize() * game.getBoardSize();
     }

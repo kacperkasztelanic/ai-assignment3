@@ -3,7 +3,7 @@ package com.ai.game.model;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.ai.game.terminal.PairManager;
+import com.ai.game.terminal.MovesManager;
 import com.ai.game.model.enums.GameCellState;
 import com.ai.game.model.enums.PlayerType;
 import com.ai.game.model.players.Player;
@@ -45,7 +45,7 @@ public class Game {
     private Game(GameSettings gameSettings) {
         boardSize = new ReadOnlyIntegerWrapper(gameSettings.getBoardSize());
         board = new int[boardSize.get()][boardSize.get()];
-        PairManager pairManager = new PairManager(boardSize.get());
+        MovesManager pairManager = new MovesManager(boardSize.get());
         player1 = PlayerFactory.getPlayer(this, AppProperties.PLAYER1_NAME, gameSettings.getPlayer1Type(),
                 GameCellState.Player1, AppProperties.PLAYER1_COLOR, pairManager,
                 gameSettings.isPlayer1AlphaBetaPruning(), gameSettings.getPlayer1TreeDepth());

@@ -2,11 +2,11 @@ package com.ai.game.terminal;
 
 public class AlphaBetaPlayer extends AbstractAIPlayer {
 	
-    AlphaBetaPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth) {
+    AlphaBetaPlayer(int playerNumber, int[][] board, MovesManager pairManager, int treeMaxDepth) {
         super(playerNumber, board, pairManager, treeMaxDepth);
     }
     
-    AlphaBetaPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth, MoveOrderType movesOrderType) {
+    AlphaBetaPlayer(int playerNumber, int[][] board, MovesManager pairManager, int treeMaxDepth, MoveOrderType movesOrderType) {
         super(playerNumber, board, pairManager, treeMaxDepth, movesOrderType);
     }
     

@@ -3,7 +3,7 @@ package com.ai.game.terminal;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PairManager {
+public class MovesManager {
 
     int boardSide;
     MovePair[] arr;
@@ -11,7 +11,7 @@ public class PairManager {
     int size;
     Random rand = new Random();
 
-    public PairManager(int boardSide) {
+    public MovesManager(int boardSide) {
         this.boardSide = boardSide;
         capacity = boardSide * boardSide;
         arr = new MovePair[capacity];

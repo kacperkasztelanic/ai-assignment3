@@ -2,11 +2,11 @@ package com.ai.game.terminal;
 
 public class MinMaxPlayer extends AbstractAIPlayer {
 	
-    MinMaxPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth) {
+    MinMaxPlayer(int playerNumber, int[][] board, MovesManager pairManager, int treeMaxDepth) {
         super(playerNumber, board, pairManager, treeMaxDepth);
     }
     
-    MinMaxPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth, MoveOrderType movesOrderType) {
+    MinMaxPlayer(int playerNumber, int[][] board, MovesManager pairManager, int treeMaxDepth, MoveOrderType movesOrderType) {
         super(playerNumber, board, pairManager, treeMaxDepth, movesOrderType);
     }
     

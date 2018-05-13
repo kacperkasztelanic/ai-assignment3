@@ -18,14 +18,14 @@ public abstract class AbstractAIPlayer extends Player {
     public  List<Long> moveTimes = new ArrayList<>();
     public List<Integer> recursions = new ArrayList<>();
 
-    public AbstractAIPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth) {
+    public AbstractAIPlayer(int playerNumber, int[][] board, MovesManager pairManager, int treeMaxDepth) {
         super(playerNumber, board, pairManager);
         this.depth = treeMaxDepth;
         this.movesOrderType = MoveOrderType.Default;
         generateBoardValues();
     }
     
-    public AbstractAIPlayer(int playerNumber, int[][] board, PairManager pairManager, int treeMaxDepth, MoveOrderType movesOrderType) {
+    public AbstractAIPlayer(int playerNumber, int[][] board, MovesManager pairManager, int treeMaxDepth, MoveOrderType movesOrderType) {
         this(playerNumber, board, pairManager, treeMaxDepth);
         this.movesOrderType = movesOrderType;
         generateBoardValues();

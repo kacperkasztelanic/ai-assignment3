@@ -2,7 +2,7 @@ package com.ai.game.model.players;
 
 import java.util.Random;
 
-import com.ai.game.terminal.PairManager;
+import com.ai.game.terminal.MovesManager;
 import com.ai.game.model.Game;
 import com.ai.game.model.Turn;
 import com.ai.game.model.enums.GameCellState;
@@ -13,7 +13,7 @@ public class RandomPlayer extends AbstractAiPlayer {
     private Random random = new Random();
 
     public RandomPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
-            PairManager pairManager, boolean alphaBetaPruning, int treeDepth) {
+            MovesManager pairManager, boolean alphaBetaPruning, int treeDepth) {
         super(game, name, playerType, gameCellState, color, pairManager, alphaBetaPruning, treeDepth);
     }
 

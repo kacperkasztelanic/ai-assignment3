@@ -1,6 +1,6 @@
 package com.ai.game.model.players;
 
-import com.ai.game.terminal.PairManager;
+import com.ai.game.terminal.MovesManager;
 import com.ai.game.model.Game;
 import com.ai.game.model.Turn;
 import com.ai.game.model.enums.GameCellState;
@@ -18,7 +18,7 @@ public abstract class AbstractAiPlayer extends Player {
     protected final ReadOnlyIntegerWrapper treeDepth;
 
     public AbstractAiPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
-            PairManager pairManager, boolean alphaBetaPruning, int treeDepth) {
+            MovesManager pairManager, boolean alphaBetaPruning, int treeDepth) {
         super(game, name, playerType, gameCellState, color, pairManager);
         this.alphaBetaPruning = new ReadOnlyBooleanWrapper(alphaBetaPruning);
         this.treeDepth = new ReadOnlyIntegerWrapper(treeDepth);
