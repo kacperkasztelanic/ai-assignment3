@@ -1,6 +1,8 @@
 package com.ai.game.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class TurnManager {
 
@@ -28,11 +30,17 @@ public class TurnManager {
         return result;
     }
 
-    public ArrayList<Turn> getUnused() {
-        ArrayList<Turn> list = new ArrayList<>(size);
+    public List<Turn> getUnused() {
+        List<Turn> list = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             list.add(arr[i]);
         }
+        return list;
+    }
+
+    public List<Turn> getRandomizedUnused() {
+        List<Turn> list = getUnused();
+        Collections.shuffle(list);
         return list;
     }
 

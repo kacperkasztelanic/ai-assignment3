@@ -6,18 +6,20 @@ import com.ai.game.model.TurnManager;
 import com.ai.game.model.enums.GameCellState;
 import com.ai.game.model.enums.Heuristic;
 import com.ai.game.model.enums.PlayerType;
+import com.ai.game.model.enums.SameValuesBehavior;
+import com.ai.game.model.enums.Strategy;
 
 public class AlphaBetaPlayer extends AbstractAiPlayer {
 
     public AlphaBetaPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
-            TurnManager turnManager, boolean alphaBetaPruning, int treeDepth, Heuristic heuristic) {
-        super(game, name, playerType, gameCellState, color, turnManager, alphaBetaPruning, treeDepth, heuristic);
+            TurnManager turnManager, boolean alphaBetaPruning, int treeDepth, Heuristic heuristic, Strategy strategy,
+            SameValuesBehavior sameValuesBehavior) {
+        super(game, name, playerType, gameCellState, color, turnManager, alphaBetaPruning, treeDepth, heuristic,
+                strategy, sameValuesBehavior);
     }
 
     @Override
     protected Turn moveInternal() {
-        this.avaliableMoves = turnManager.getUnused();
-
         solveRecMax(0, game.getMovesDone(), treeDepth.get(), Integer.MIN_VALUE, Integer.MAX_VALUE);
 
         return avaliableMoves.get(moveIndex);
@@ -31,7 +33,7 @@ public class AlphaBetaPlayer extends AbstractAiPlayer {
             Turn turn = avaliableMoves.get(i);
             if (isMoveAvaliable(turn)) {
                 game.setGameBoardCellValue(turn.getRow(), turn.getColumn(), gameCellState.get().toInt());
-                currentPts = calculatePtsWithPrediction(turn.getRow(), turn.getColumn());
+                currentPts = calculatePtsWithPredictionForCurrentPlayer(turn.getRow(), turn.getColumn());
                 if (movesDone + 1 < movesToDo && depth > 1) {
                     accumulatedPts = solveRecMin(value + currentPts, movesDone + 1, depth - 1, choosenPts, beta);
                 } else {

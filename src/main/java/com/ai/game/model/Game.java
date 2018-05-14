@@ -45,10 +45,10 @@ public class Game {
         board = new int[boardSize.get()][boardSize.get()];
         TurnManager turnManager = new TurnManager(boardSize.get());
         player1 = PlayerFactory.getPlayer(this, AppProperties.PLAYER1_NAME, gameSettings.getPlayer1Type(),
-                GameCellState.Player1, AppProperties.PLAYER1_COLOR, turnManager,
+                GameCellState.PLAYER1, AppProperties.PLAYER1_COLOR, turnManager,
                 gameSettings.isPlayer1AlphaBetaPruning(), gameSettings.getPlayer1TreeDepth());
         player2 = PlayerFactory.getPlayer(this, AppProperties.PLAYER2_NAME, gameSettings.getPlayer2Type(),
-                GameCellState.Player2, AppProperties.PLAYER2_COLOR, turnManager,
+                GameCellState.PLAYER2, AppProperties.PLAYER2_COLOR, turnManager,
                 gameSettings.isPlayer2AlphaBetaPruning(), gameSettings.getPlayer2TreeDepth());
         currentPlayer = new ReadOnlyObjectWrapper<>(player1);
         isWaiting = new ReadOnlyBooleanWrapper();

@@ -2,7 +2,7 @@ package com.ai.game.model.enums;
 
 public enum GameCellState {
 
-    EMPTY(0), Player1(1), Player2(2);
+    EMPTY(0), PLAYER1(1), PLAYER2(2);
 
     private final int code;
 
@@ -17,9 +17,9 @@ public enum GameCellState {
     public static GameCellState fromInt(int code) {
         switch (code) {
         case 1:
-            return GameCellState.Player1;
+            return GameCellState.PLAYER1;
         case 2:
-            return GameCellState.Player2;
+            return GameCellState.PLAYER2;
         case 0:
         default:
             return GameCellState.EMPTY;

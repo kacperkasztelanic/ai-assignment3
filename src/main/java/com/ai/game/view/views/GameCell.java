@@ -24,12 +24,12 @@ public class GameCell extends Pane {
         rect.heightProperty().bind(heightProperty());
         state.bind(game.getGameCellStateProperty(row, col));
         state.addListener((o, ov, nv) -> rect.setFill(
-                Color.web(nv == GameCellState.Player1 ? game.getPlayer1().getColor() : game.getPlayer2().getColor())));
+                Color.web(nv == GameCellState.PLAYER1 ? game.getPlayer1().getColor() : game.getPlayer2().getColor())));
         getChildren().setAll(rect);
 
         setOnMousePressed(e -> {
             if (isClickable()) {
-                game.setGameCellState(row, col, game.isPlayer1Turn() ? GameCellState.Player1 : GameCellState.Player2);
+                game.setGameCellState(row, col, game.isPlayer1Turn() ? GameCellState.PLAYER1 : GameCellState.PLAYER2);
             }
         });
         setOnMouseEntered(e -> {

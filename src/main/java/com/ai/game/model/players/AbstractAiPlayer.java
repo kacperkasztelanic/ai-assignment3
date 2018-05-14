@@ -8,6 +8,8 @@ import com.ai.game.model.TurnManager;
 import com.ai.game.model.enums.GameCellState;
 import com.ai.game.model.enums.Heuristic;
 import com.ai.game.model.enums.PlayerType;
+import com.ai.game.model.enums.SameValuesBehavior;
+import com.ai.game.model.enums.Strategy;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -20,7 +22,9 @@ public abstract class AbstractAiPlayer extends AbstractPlayer {
     protected final ReadOnlyBooleanWrapper alphaBetaPruning;
     protected final ReadOnlyIntegerWrapper treeDepth;
 
-    protected Heuristic heuristic;
+    protected final Heuristic heuristic;
+    protected final Strategy strategy;
+    protected final SameValuesBehavior sameValuesBehavior;
     protected int[][] boardValues;
 
     protected List<Turn> avaliableMoves;
@@ -28,11 +32,14 @@ public abstract class AbstractAiPlayer extends AbstractPlayer {
     protected int moveIndex;
 
     public AbstractAiPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
-            TurnManager turnManager, boolean alphaBetaPruning, int treeDepth, Heuristic heuristic) {
+            TurnManager turnManager, boolean alphaBetaPruning, int treeDepth, Heuristic heuristic, Strategy strategy,
+            SameValuesBehavior sameValuesBehavior) {
         super(game, name, playerType, gameCellState, color, turnManager);
         this.alphaBetaPruning = new ReadOnlyBooleanWrapper(alphaBetaPruning);
         this.treeDepth = new ReadOnlyIntegerWrapper(treeDepth);
         this.heuristic = heuristic;
+        this.strategy = strategy;
+        this.sameValuesBehavior = sameValuesBehavior;
         boardValues = generateBoardValues();
         movesToDo = game.getBoardSize() * game.getBoardSize();
     }
@@ -84,8 +91,68 @@ public abstract class AbstractAiPlayer extends AbstractPlayer {
         return points;
     }
 
+    protected int calculatePtsWithPredictionForCurrentPlayer(int y, int x) {
+        int points = calculatePtsWithPrediction(y, x);
+        if (strategy == Strategy.NOT_LAST_BUT_ONE_IN_LINE) {
+            points += calculateLastButOne(y, x);
+        }
+        return points;
+    }
+
+    protected int calculateLastButOne(int y, int x) {
+        int points = 0;
+        int divideBy = 3;
+        int row = 0;
+        int size = game.getBoardSize();
+        for (int i = 0; i < size; i++) {
+            row += game.isGameBoardCellEmpty(y, i) ? 1 : 0;
+        }
+        if (row == 1) {
+            points -= Math.max(1, size / divideBy);
+        }
+        int column = 0;
+        for (int j = 0; j < size; j++) {
+            column += game.isGameBoardCellEmpty(j, x) ? 1 : 0;
+        }
+        if (column == 1) {
+            points -= Math.max(1, size / divideBy);
+        }
+        int diagonal1 = 0;
+        int temp = Math.min(y, x);
+        int y2 = y - temp;
+        int x2 = x - temp;
+        while (x2 < size && y2 < size) {
+            diagonal1 = game.isGameBoardCellEmpty(y2++, x2++) ? 1 : 0;
+        }
+        if (diagonal1 == 1) {
+            int pts = Math.min(y2, x2) / 2;
+            if (pts > 1) {
+                points -= Math.max(1, pts / divideBy);
+            }
+        }
+        int diagonal2 = 0;
+        int temp2 = Math.min(y, size - x - 1);
+        int y3 = y - temp2;
+        int x3 = x + temp2;
+        while (x3 > -1 && y3 < size) {
+            diagonal2 += game.isGameBoardCellEmpty(y3++, x3--) ? 1 : 0;
+        }
+        if (diagonal2 == 1) {
+            int pts = Math.min(y3, size - x3 - 1) / 2;
+            if (pts > 1) {
+                points -= Math.max(1, pts / divideBy);
+            }
+        }
+        return points;
+    }
+
     @Override
     public void move(Turn turn) {
+        if (sameValuesBehavior == SameValuesBehavior.DEFAULT) {
+            this.avaliableMoves = turnManager.getUnused();
+        } else if (sameValuesBehavior == SameValuesBehavior.RANDOM) {
+            this.avaliableMoves = turnManager.getRandomizedUnused();
+        }
         Turn t = moveInternal();
         turnManager.removePair(t);
 

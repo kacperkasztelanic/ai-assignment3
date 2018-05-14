@@ -6,7 +6,6 @@ import com.ai.game.model.Game;
 import com.ai.game.model.Turn;
 import com.ai.game.model.TurnManager;
 import com.ai.game.model.enums.GameCellState;
-import com.ai.game.model.enums.Heuristic;
 import com.ai.game.model.enums.PlayerType;
 
 public class RandomPlayer extends AbstractAiPlayer {
@@ -15,7 +14,7 @@ public class RandomPlayer extends AbstractAiPlayer {
 
     public RandomPlayer(Game game, String name, PlayerType playerType, GameCellState gameCellState, String color,
             TurnManager turnManager) {
-        super(game, name, playerType, gameCellState, color, turnManager, false, 0, Heuristic.DEFAULT);
+        super(game, name, playerType, gameCellState, color, turnManager, false, 0, null, null, null);
     }
 
     @Override
