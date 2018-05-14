@@ -25,7 +25,7 @@ public interface AppProperties {
     static final int MIN_TREE_DEPTH = 1;
     static final int MAX_TREE_DEPTH = 10;
     static final int DEFAULT_TREE_DEPTH = 3;
-    static final int MIN_BOARD_SIZE = 1;
-    static final int MAX_BOARD_SIZE = 100;
+    static final int MIN_BOARD_SIZE = 2;
+    static final int MAX_BOARD_SIZE = 150;
     static final int DEFAULT_BOARD_SIZE = 5;
 }
